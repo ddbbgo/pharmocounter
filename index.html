@@ -21,6 +21,27 @@
             --shop-bg: #f4f9ff;
             --shop-border: #dbeafe;
             --shop-text: #003a80;
+            
+            /* Aggiungi questo blocco CSS all'interno del tag <style> */
+        .precision-card {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            text-align: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .card-platinum { background: linear-gradient(135deg, #e5e4e2, #a9a9a9); color: #333; box-shadow: 0 4px 15px rgba(169, 169, 169, 0.4); }
+        .card-gold { background: linear-gradient(135deg, #FFD700, #DAA520); color: #805a00; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
+        .card-silver { background: linear-gradient(135deg, #C0C0C0, #808080); color: #444; }
+        .card-bronze { background: linear-gradient(135deg, #CD7F32, #A0522D); color: #ffffff; }
+        .card-default { background: #f0f0f5; color: var(--text-sec); }
+
         }
 
         body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; min-height: 100vh; margin: 0; padding: 20px 15px; box-sizing: border-box; color: var(--text-main); -webkit-font-smoothing: antialiased; }
@@ -82,7 +103,7 @@
         }
 
         /* WATER TRACKER */
-        .water-box { margin-top: 20px; padding: 15px; background: #eef7ff; border-radius: 16px; border: 1px solid #dbeafe; }
+    .water-box { margin-top: 20px; padding: 15px; background: #eef7ff; border-radius: 16px; border: 1px solid #dbeafe; margin-bottom: 20px; }
         .water-title { font-size: 0.85rem; font-weight: 700; color: #004494; margin-bottom: 10px; display: flex; justify-content: space-between; }
         .water-grid { display: flex; justify-content: space-between; gap: 5px; }
         .water-glass {
@@ -121,7 +142,7 @@
         /* FOOD LIST & EMPTY STATE */
         .food-list { list-style: none; padding: 0; margin: 0; min-height: 20px; }
         .food-item { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px 0; border-bottom: 1px solid #f0f0f5; align-items: center; }
-        .food-info { min-width: 0; }
+        .food-info { min-width: 0; text-align: left; } 
         .food-name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #333; }
         .food-details { font-size: 0.75rem; color: var(--text-sec); margin-top: 3px; }
         .food-actions { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
@@ -141,7 +162,6 @@
         .row { display: flex; gap: 8px; }
         .btn-main { background: #1c1c1e; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-main:active { transform: scale(0.98); }
-        .small-inputs input { font-size: 0.85rem; text-align: center; padding: 10px 4px; }
 
         /* MODALS */
         .modal-overlay {
@@ -224,7 +244,8 @@
             La tua pelle e i tuoi muscoli ringraziano.<br><br>
             Ecco un premio speciale per i drenanti:
             <span class="reward-code" onclick="copyCode(this)">PHARMOSPED</span>
-            <small style="color:#888;">Clicca il codice per copiarlo</small>
+            <small style="color:#888;">Clicca il codice per copiarlo</small><br>
+            <b style="color:var(--accent); margin-top:10px; display:block;">Usalo subito su pharmo.it per i tuoi prodotti preferiti!</b>
         </div>
         <button class="modal-btn" onclick="closeReward('waterRewardModal')">Riscatta Ora</button>
     </div>
@@ -261,14 +282,14 @@
                 <input type="number" id="height" value="175" onchange="calc()">
             </div>
             
-<div style="grid-column: 1 / -1;">
-    <label>🎯 Peso Obiettivo (kg) <span style="font-weight: normal; color: #888;">(opzionale)</span></label>
-    <input type="number" id="targetWeightInput" placeholder="es. 65" onchange="calc()">
-</div>
-<div style="grid-column: 1 / -1;">
-    <label>📅 Data Obiettivo <span style="font-weight: normal; color: #888;">(opzionale)</span></label>
-    <input type="date" id="targetDateInput" onchange="calc()">
-</div>
+            <div style="grid-column: 1 / -1;">
+                <label>🎯 Peso Obiettivo (kg) <span style="font-weight: normal; color: #888;">(opzionale)</span></label>
+                <input type="number" id="targetWeightInput" placeholder="es. 65" onchange="calc()">
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <label>📅 Data Obiettivo <span style="font-weight: normal; color: #888;">(opzionale)</span></label>
+                <input type="date" id="targetDateInput" onchange="calc()">
+            </div>
 
             
             <div style="grid-column: 1 / -1;">
@@ -318,18 +339,26 @@
         <div class="status-text" id="statusText">...</div>
     </div>
     
-    <div class="cumulative-box">
-        <div class="cumul-label">Deficit Totale Risparmiato (Stima)</div>
-        <div class="cumul-value" id="cumulativeDisplay">0 Kg</div>
-        <div class="pred-status" id="predictionStatus">Inserisci Obiettivo Peso e Data per l'analisi</div>
-    </div>
+<div class="cumulative-box">
+    <div class="cumul-label">Deficit Totale Risparmiato (Stima)</div>
+    <div class="cumul-value" id="cumulativeDisplay">0 Kg</div>
+    <div class="pred-status" id="predictionStatus">Inserisci Obiettivo Peso e Data per l'analisi</div>
+</div>
+    
+<div style="text-align: center; margin-top: 15px;">
+    <span style="font-size: 0.9rem; color: var(--text-sec); font-weight: 600;">PRECISIONE GIORNALIERA:</span>
+    <div id="bullseyeBadge" class="precision-card card-default" onclick="showPrecisionInfo()">Inizia a loggare</div>
+<div style="text-align: center; margin-top: 15px; padding: 5px 0; margin-bottom: 30px;"> 
+    <span style="font-size: 0.9rem; color: #007aff; font-weight: 700;">SERIE PLATINO:</span>
+    <span id="platinumStreakDisplay" style="font-size: 1.1rem; color: var(--success); font-weight: 800; margin-left: 5px;">0 giorni</span>
+</div>
+<div class="shop-card" id="shopCard">
+    <span class="shop-tag">Protocollo Consigliato</span>
+    <h3 class="shop-title" id="shopTitle">...</h3>
+    <div class="shop-content" id="shopDesc">...</div>
+    <a href="https://www.pharmo.it" target="_blank" class="btn-shop">Acquista il Protocollo su Pharmo.it →</a>
+</div>
 
-    <div class="shop-card" id="shopCard">
-        <span class="shop-tag">Protocollo Consigliato</span>
-        <h3 class="shop-title" id="shopTitle">...</h3>
-        <div class="shop-content" id="shopDesc">...</div>
-        <a href="https://www.pharmo.it" target="_blank" class="btn-shop">Acquista il Protocollo su Pharmo.it →</a>
-    </div>
 
     <div class="water-box">
         <div class="water-title">
@@ -395,8 +424,8 @@
 
     const KCAL_PER_KG_FAT = 7700; 
     const SECONDS_IN_DAY = 86400;
-    const MAX_SAFE_DAILY_DEFICIT = 1000; // Limite massimo di deficit per il blocco data
-
+    const MAX_SAFE_DAILY_DEFICIT = 1000; 
+    const PT_MIN_MULTIPLIER = 1.8; // Soglia scientifica (1.8g/kg)
 
     // --- SHOP TEXT CONSTANTS ---
     const stackLoss = `
@@ -503,23 +532,61 @@
 
     // --- AUTOMATIC DAILY RESET & CUMULATIVE UPDATE (MASTER CHECK) ---
     if (localStorage.getItem('app_date') !== todayStr) {
-        // 1. Calculate and add previous day's result to cumulative deficit
-        // This ensures the cumulative deficit is only updated once per "day" (post 4 AM shift)
         if (lastDayTarget > 0) {
             let lastDayDeficit = lastDayTarget - lastDayTotalConsumed;
             cumulativeDeficit += lastDayDeficit;
             localStorage.setItem('cumulative_deficit', cumulativeDeficit);
         }
         
-        // 2. Reset daily trackers
+        // --- MORNING PROTEIN RISK CHECK (YESTERDAY'S DATA) ---
+        let lastDayPTMinG = parseFloat(localStorage.getItem('last_day_pt_min_g')) || 0;
+        let lastDayCurP = parseFloat(localStorage.getItem('last_day_cur_p')) || 0;
+        
+        if (lastDayPTMinG > 0 && lastDayCurP < lastDayPTMinG && lastDayTarget > 0) {
+             showToast(`⚠️ Quota Proteica Rischio! Hai assunto solo ${lastDayCurP}g su ${lastDayPTMinG}g ieri. Proteggi i tuoi muscoli!`);
+        }
+        // ----------------------------------------------------
+        
+        // --- LOGICA PLATINO STREAK (NUOVO - 5 Giorni Oro) ---
+        const lastPrecision = parseInt(localStorage.getItem('last_day_precision')) || 0;
+        let platinumStreak = parseInt(localStorage.getItem('platinum_streak')) || 0;
+        
+        // La serie si aggiorna solo se il giorno precedente era ORO (livello 3)
+        if (lastPrecision >= 3) { 
+            platinumStreak++;
+        } else {
+            platinumStreak = 0; // Reset se ha mancato l'Oro
+        }
+        
+        localStorage.setItem('platinum_streak', platinumStreak);
+        
+         if (platinumStreak >= 5 && !localStorage.getItem('claimed_platinum_5')) {
+            // SBLOCCA IL PLATINO DOPO 5 GIORNI CONSECUTIVI DI ORO
+            const rewardCodePlatinum = "PHARMOSPED"; 
+            
+            // MESSAGGIO AGGIORNATO CON INVITO ALL'AZIONE
+            alert(`💎 PLATINO SBLOCCATO! 5 giorni di precisione Oro!\n\nIl tuo premio speciale è: ${rewardCodePlatinum}\n\nUsalo subito su pharmo.it per i tuoi prodotti preferiti!`);
+            window.open('https://www.pharmo.it', '_blank');
+            localStorage.setItem('claimed_platinum_5', 'true');
+        }
+       
+
+        
+        localStorage.setItem('platinum_streak', platinumStreak);
+        
+        if (platinumStreak >= 7 && !localStorage.getItem('claimed_platinum')) {
+            // SBLOCCA IL PLATINO DOPO 7 GIORNI CONSECUTIVI DI ORO
+            alert("💎 PLATINO SBLOCCATO! 7 giorni di precisione Oro! Riscatta il tuo premio speciale!");
+            localStorage.setItem('claimed_platinum', 'true');
+            // Nota: Qui puoi aggiungere la logica per mostrare la tua modal Platinum dedicata
+        }
+        // ------------------------------------
+        
         localStorage.setItem('foods_v3', JSON.stringify([])); 
         localStorage.setItem('water_count', 0); 
         localStorage.setItem('water_last_time', 0); 
-        
-        // 3. Update date marker (MUST BE LAST)
         localStorage.setItem('app_date', todayStr); 
 
-        // 4. Update streak logic
         const yesterday = new Date(now);
         yesterday.setDate(yesterday.getDate() - 1);
         if (lastVisitDate !== todayStr) {
@@ -549,10 +616,79 @@
 
     // --- STREAK & REWARD LOGIC ---
     document.getElementById('streakDisplay').innerText = `🔥 ${streakCount}gg`;
-
-    function showStreakInfo() {
-        alert("LA SFIDA DI PHARMO.IT\n\nUsa l'applicazione con costanza per sbloccare Codici Sconto Esclusivi!\n\nLivelli:\n- 7 Giorni: Bronzo\n- 14 Giorni: Argento\n- 30 Giorni: Oro\n\nAttuale: " + streakCount + " giorni.\n\n⚠️ NOTA: I codici sconto cambiano regolarmente! Utilizzali in fretta appena sbloccati.\n\n💡 IMPORTANTE: Ricordati di aggiornare il tuo peso nel profilo ogni 7 giorni.");
+    
+    // Aggiornamento display Platino Streak
+    const platinumStreak = parseInt(localStorage.getItem('platinum_streak')) || 0;
+    const streakElement = document.getElementById('platinumStreakDisplay');
+    if (streakElement) {
+        streakElement.innerText = `${platinumStreak} / 5 giorni ORO`;
+        if (platinumStreak >= 5) { // ORA CONTROLLA 5
+             streakElement.style.color = '#FFD700'; // Platino/Oro
+             streakElement.innerText = `💎 PLATINO ATTIVO (${platinumStreak}gg)`;
+        } else if (platinumStreak > 0) {
+             streakElement.style.color = 'var(--orange)'; // Se la serie è iniziata ma non completa
+        }
     }
+
+
+        function showStreakInfo() {
+        const streakCount = parseInt(localStorage.getItem('streak_days')) || 0; 
+        let alertMessage = "LA SFIDA DI PHARMO.IT\n\nUsa l'applicazione con costanza per sbloccare Codici Sconto Esclusivi!\n\nLivelli:\n- 7 Giorni: Bronzo\n- 14 Giorni: Argento\n- 30 Giorni: Oro\n\nAttuale: " + streakCount + " giorni.\n\n⚠️ NOTA: I codici sconto cambiano regolarmente! Utilizzali in fretta appena sbloccati.\n\n💡 IMPORTANTE: Ricordati di aggiornare il tuo peso nel profilo ogni 7 giorni.";
+        
+        let rewardCode = null;
+
+        // I codici e i flag devono essere sempre aggiornati se si cambia la logica
+        if (streakCount >= 30 && !localStorage.getItem('claimed_gold_30')) {
+            rewardCode = "PHARMO30GOLD";
+            localStorage.setItem('claimed_gold_30', 'true');
+        } else if (streakCount >= 14 && !localStorage.getItem('claimed_silver_14')) {
+            rewardCode = "PHARMO14SILVER";
+            localStorage.setItem('claimed_silver_14', 'true');
+        } else if (streakCount >= 7 && !localStorage.getItem('claimed_bronze_7')) {
+            rewardCode = "PHARMO7BRONZE";
+            localStorage.setItem('claimed_bronze_7', 'true');
+        }
+
+        if (rewardCode) {
+            // QUI AGGIUNGIAMO LA FRASE E IL CODICE
+            alertMessage = `Complimenti! Hai sbloccato un nuovo premio!\n\nIl tuo codice sconto è: ${rewardCode}\n\nUsalo subito su pharmo.it per i tuoi prodotti preferiti!`;
+        }
+        
+        alert(alertMessage);
+
+        // APRE IL SITO SOLO SE È STATO SBLOCCATO UN NUOVO CODICE
+        if (rewardCode) {
+            window.open('https://www.pharmo.it', '_blank');
+        }
+    }
+
+        // --- STREAK & REWARD LOGIC (Continua) ---
+    // ... (La funzione showStreakInfo() che hai appena trovato finisce qui) ...
+
+    function showPrecisionInfo() {
+    const platinumStreak = parseInt(localStorage.getItem('platinum_streak')) || 0;
+    const msg = `🏆 SISTEMA CARTE PRECISIONE PHARMO 🏆
+
+Il tuo obiettivo è usare tutte le calorie (TGT CAL) a disposizione, senza sforare!
+
+**CRITERI GIORNALIERI (Precisione Massima):**
+   ‣ ORO 🥇:  Rimanere entro 50 Kcal dal Target (massimo deficit).
+   ‣ ARGENTO 🥈: Rimanere tra 51 Kcal e 100 Kcal dal Target.
+   ‣ BRONZO 🥉: Rimanere tra 101 Kcal e 200 Kcal dal Target.
+   
+   (Lasciare >200 Kcal o Sforare = Serie interrotta.)
+
+**RICONOSCIMENTO PLATINO (Costanza):**
+La Carta Platino è il traguardo massimo a lungo termine!
+Si sblocca mantenendo la **Carta ORO (Perfetto)** per 5 giorni consecutivi.
+
+   ‣ Stato attuale: ${platinumStreak} giorni consecutivi Oro.
+   
+Mantieni la serie Oro per sbloccare la **Serie Platino** al 5° giorno, e ottenere un codice esclusivo da usare su pharmo.it!`; 
+    
+    alert(msg);
+}
+
 
     // Check App Milestones (7, 14, 30)
     let rewardCode = "";
@@ -593,29 +729,23 @@
         let wStreak = parseInt(localStorage.getItem('water_streak_days')) || 0;
         let lastWaterWin = localStorage.getItem('last_water_win_date');
         
-        // We only check for new streak if the current day has not yet registered a streak win or fail
         if (lastWaterWin !== todayStr) {
             const yesterday = new Date(now);
             yesterday.setDate(yesterday.getDate() - 1);
             
-            // Check if user completed water yesterday
-            // NOTE: For this to work, a daily water win status should be saved before the reset, 
-            // but since we are resetting the counter, we assume the check happens right after a win.
-            
-            // We use a simplified logic: if lastWaterWin was yesterday, assume continuity.
             if (lastWaterWin === yesterday.toDateString()) {
                 wStreak++;
             } else {
-                wStreak = 1; // Reset if gap
+                wStreak = 1;
             }
             
             localStorage.setItem('water_streak_days', wStreak);
-            localStorage.setItem('last_water_win_date', todayStr); // Mark today as checked
+            localStorage.setItem('last_water_win_date', todayStr);
             
             if (wStreak >= 3 && !localStorage.getItem('water_reward_claimed')) {
                 document.getElementById('waterRewardModal').style.display = 'flex';
             } else {
-                showToast(`Ottimo! 💧 Serie idratazione: ${wStreak} giorni.`);
+                showToast(`Ottimo! 💧 Serie idratazione: ${wStreak}/3 giorni.`);
             }
         }
     }
@@ -657,7 +787,6 @@
         const lastDrink = parseInt(localStorage.getItem('water_last_time')) || 0;
         const oneHour = 60 * 60 * 1000;
 
-        // AGGIUNTA
         if (idx === waterCount) {
             if (waterCount > 0 && (currentTime - lastDrink < oneHour)) {
                 let minutesLeft = Math.ceil((oneHour - (currentTime - lastDrink)) / 60000);
@@ -668,14 +797,12 @@
             localStorage.setItem('water_last_time', currentTime);
             renderWater();
             
-            // Check win condition
             if (waterCount === 8) {
                 checkWaterStreak();
             } else {
                 showToast("Idratazione registrata! 💧 Continua per la Sfida 3 Giorni.");
             }
         } 
-        // RIMOZIONE
         else if (idx === waterCount - 1) {
             waterCount--;
             renderWater();
@@ -703,14 +830,24 @@
         }
     }
 
-    function checkTimeAdvice() {
+    function checkTimeAdvice(currentProtein) {
         const hour = new Date().getHours();
+        const currentPTMinG = parseFloat(localStorage.getItem('pt_min_g')) || 0;
+
         if (hour >= 6 && hour < 11) {
+            // Mattina: General advice
             showToast("Buongiorno! Attiva il metabolismo con Pharmofit.");
         } else if (hour >= 12 && hour < 15) {
+            // Pranzo: Pharmolain advice
             showToast("Pranzo proteico? Pharmolain aiuta la digestione.");
-        } else if (hour >= 20 && hour <= 23) {
-            showToast("La pelle si rigenera di notte. Usa Pharmofiller.");
+        } else if (hour >= 20 && hour <= 22) { 
+            // Sera (8 PM - 10 PM): Protein Check
+            if (currentPTMinG > 0 && currentProtein < currentPTMinG) {
+                let diff = Math.round(currentPTMinG - currentProtein);
+                showToast(`⚠️ SOS Proteine! Mancano ${diff}g per proteggere la massa muscolare oggi. Recupera subito!`);
+            } else {
+                 showToast("La pelle si rigenera di notte. Usa Pharmofiller.");
+            }
         }
     }
 
@@ -718,8 +855,6 @@
     // --- CORE LOGIC (CALCULATION & RENDER) ---
     
     // RESTORE INPUTS (HTML) 
-    // This is repeated in calc, but here ensures the display is correct on load
-    document.getElementById('dateText').innerText = realNow.toLocaleDateString('it-IT', options);
     document.getElementById('gender').value = state.g;
     document.getElementById('age').value = state.age;
     document.getElementById('weight').value = state.w;
@@ -732,6 +867,8 @@
 
 
     let TGT_CAL = 0, TGT_C = 0, TGT_P = 0, TGT_F = 0, BMR = 0, TDEE = 0;
+    let PT_MIN_G = 0; // Dichiarazione della variabile soglia proteica
+
 
     function calc() {
         let oldWeight = state.w;
@@ -745,7 +882,7 @@
             }
         }
 
-                // Collect current input state, including new target fields
+        // Collect current input state, including new target fields
         state = {
             g: document.getElementById('gender').value,
             age: parseFloat(document.getElementById('age').value),
@@ -763,16 +900,15 @@
         BMR = (state.g === 'm') ? s + 5 : s - 161;
         TDEE = Math.round(BMR * state.act);
 
-        let adjustments = {
+         let adjustments = {
             'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 
-            'detox': 0.95, 'beauty': 1.0, 'recomp': 1.0, 
+            'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, // MODIFICA QUI: 0.95 (Deficit -5%)
             'maintain': 1.0, 'gain': 1.10
         };
         TGT_CAL = Math.round(TDEE * adjustments[state.goal]);
 
-              let safetyText = "";
-        // TROVA LA RIGA SOPRA E INSERISCI QUI SOTTO:
-
+        let safetyText = "";
+        
         // --- SAFETY CHECK (Blocco Rigido Data) ---
         if (state.targetW > 0 && state.w > state.targetW) {
             let weightGap = state.w - state.targetW;
@@ -809,11 +945,12 @@
             safetyText = "<br><span style='color:var(--orange); font-weight:600;'>⚠️ Target limitato al BMR per sicurezza.</span>";
         }
 
-        // 2. Macro Logic & Shop Text Assignment (Protocollo Consigliato FIX)
+        // 2. Macro Logic & Shop Text Assignment
         let p_ratio, c_ratio, f_ratio, goalText;
         let sTitle, sDesc;
+        let requiresHighProtein = false; 
 
-        // Default: Mantenimento Standard 50/20/30 - Use Gain Stack as a generic struct.
+        // Default: Mantenimento Standard 50/20/30
         c_ratio = 0.50; p_ratio = 0.20; f_ratio = 0.30; 
         sTitle = "Protocollo Definizione & Struttura";
         sDesc = stackGain; 
@@ -821,9 +958,9 @@
 
         if(state.goal === 'lose_aggr' || state.goal === 'lose_athlete_15' || state.goal === 'lose_cons') {
             sTitle = "Protocollo Total Body 3-Fasi"; sDesc = stackLoss;
-            if(state.goal === 'lose_aggr') { c_ratio = 0.40; p_ratio = 0.30; f_ratio = 0.30; goalText = "Perdita Peso Standard (-20%)"; } 
-            else if (state.goal === 'lose_athlete_15') { c_ratio = 0.35; p_ratio = 0.35; f_ratio = 0.30; goalText = "Atleta / Cut Aggressivo (-15%)"; } 
-            else { c_ratio = 0.40; p_ratio = 0.30; f_ratio = 0.30; goalText = "Atleta / Cut Conservativo (-10%)"; }
+            if(state.goal === 'lose_aggr') { c_ratio = 0.40; p_ratio = 0.30; f_ratio = 0.30; goalText = "Perdita Peso Standard (-20%)"; requiresHighProtein = true; } 
+            else if (state.goal === 'lose_athlete_15') { c_ratio = 0.35; p_ratio = 0.35; f_ratio = 0.30; goalText = "Atleta / Cut Aggressivo (-15%)"; requiresHighProtein = true; } 
+            else { c_ratio = 0.40; p_ratio = 0.30; f_ratio = 0.30; goalText = "Atleta / Cut Conservativo (-10%)"; requiresHighProtein = true; }
         
         } else if (state.goal === 'detox') {
             c_ratio = 0.50; p_ratio = 0.20; f_ratio = 0.30; 
@@ -834,12 +971,23 @@
             goalText = "Beauty & Anti-Age"; sTitle = "Protocollo Glow: Pelle & Microcircolo"; sDesc = stackBeauty;
 
         } else if (state.goal === 'recomp') {
-            c_ratio = 0.35; p_ratio = 0.35; f_ratio = 0.30; // High Protein for Recomposition
+            c_ratio = 0.35; p_ratio = 0.35; f_ratio = 0.30; 
             goalText = "Ricomposizione Corporea"; sTitle = "Protocollo Body Recomp"; sDesc = stackRecomp;
-
+            requiresHighProtein = true; 
+        
         } else if (state.goal === 'gain') {
             c_ratio = 0.50; p_ratio = 0.20; f_ratio = 0.30; goalText = "Surplus Muscolare (+10%)";
         }
+
+
+        // --- Calcolo e Salvataggio Soglia Proteica Minima (PT_MIN_G) ---
+        if (requiresHighProtein) {
+            PT_MIN_G = Math.round(state.w * PT_MIN_MULTIPLIER);
+        } else {
+            PT_MIN_G = 0; 
+        }
+        localStorage.setItem('pt_min_g', PT_MIN_G); 
+        // ----------------------------------------------------
 
 
         document.getElementById('shopTitle').innerText = sTitle;
@@ -935,39 +1083,40 @@
             predBox.style.backgroundColor = '#ffc9c9';
             predBox.style.color = 'var(--danger)';
             predBox.style.borderColor = 'var(--danger)';
-            predBox.innerHTML = `⛔ **Piano Non Allineato!** Per raggiungere ${state.targetW}kg in tempo, dovresti tagliare ${requiredDailyDeficit} Kcal/giorno (tu ne tagli ${currentDeficit}). Consigliamo: **Cambia piano Cut** oppure **posticipa la Data Obiettivo**.`;
+            predBox.innerHTML = `⛔ **Piano Non Allineato!** Per raggiungere ${state.targetW}kg in tempo, dovresti tagliare ${requiredDailyDeficit} Kcal/giorno (tu ne tagli ${currentDeficit}). Consigliamo: **Scegli un piano Cut** oppure **posticipa la Data Obiettivo**.`;
         }
     }
 
 
-
     function render() {
-        const list = document.getElementById('list');
-        list.innerHTML = '';
-        let curCal=0, curC=0, curP=0, curF=0;
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    let curCal=0, curC=0, curP=0, curF=0;
+    const currentPTMinG = parseFloat(localStorage.getItem('pt_min_g')) || 0; // Carica la soglia minima
 
-        foods.slice().reverse().forEach((f, idx) => {
-            curCal += f.k; curC += f.c; curP += f.p; curF += f.f;
-            const li = document.createElement('li');
-            li.className = 'food-item';
-            li.innerHTML = `
-                <div class="food-info">
-                    <div class="food-name">${f.n}</div>
-                    <div class="food-details">C:${f.c} P:${f.p} G:${f.f}</div>
-                </div>
-                <div class="food-actions">
-                    <span class="food-cal">${f.k}</span>
-                    <button class="btn-del" onclick="rem(${foods.length - 1 - idx})">elimina</button>
-                </div>`;
-            list.appendChild(li);
-        });
+    foods.slice().reverse().forEach((f, idx) => {
+        curCal += f.k; curC += f.c; curP += f.p; curF += f.f;
+        const li = document.createElement('li');
+        li.className = 'food-item';
+        li.innerHTML = `
+            <div class="food-info">
+                <div class="food-name">${f.n}</div>
+                <div class="food-details">C:${f.c} P:${f.p} G:${f.f}</div>
+            </div>
+            <div class="food-actions">
+                <span class="food-cal">${f.k}</span>
+                <button class="btn-del" onclick="rem(${foods.length - 1 - idx})">elimina</button>
+            </div>`;
+        list.appendChild(li);
+    });
 
         // Store current consumption for cumulative update tomorrow
         localStorage.setItem('last_day_total_consumed', curCal);
+        localStorage.setItem('last_day_cur_p', curP); // NEW: Save current protein intake
 
-        // This call is now redundant here since it's done in updatePredictionStatus, but harmless
-        // const cumulativeKg = (cumulativeDeficit / KCAL_PER_KG_FAT).toFixed(1);
-        // document.getElementById('cumulativeDisplay').innerText = `${cumulativeKg} Kg`;
+        // Update Cumulative Display
+        const cumulativeKg = (cumulativeDeficit / KCAL_PER_KG_FAT).toFixed(1);
+        document.getElementById('cumulativeDisplay').innerText = `${cumulativeKg} Kg`;
 
 
         // Empty State Tips
@@ -999,6 +1148,56 @@
         let diff = TGT_CAL - curCal;
         document.getElementById('remCal').innerText = diff;
         document.getElementById('remCal').style.color = diff < 0 ? 'var(--danger)' : 'var(--text-main)';
+
+        
+        // --- INIZIO LOGICA CARTE PRECISIONE (ORO/ARGENTO/BRONZO) ---
+        const diffRimanente = diff; // Differenza positiva = ancora calorie; Negativa = sforato
+        const badgeElement = document.getElementById('bullseyeBadge');
+        
+        // Se per qualche motivo l'elemento non è stato caricato, usciamo puliti.
+        if (!badgeElement) {
+             console.error("BullseyeBadge element not found.");
+        } else {
+            let cardClass = 'card-default';
+            let cardText = 'Inizia a loggare';
+            let toastMessage = '';
+
+            if (diffRimanente < 0) {
+                // FUORI TARGET: Se la differenza è negativa, hai sforato.
+                cardClass = 'card-default'; 
+                cardText = `❌ SFORATO di ${Math.abs(diffRimanente)} Kcal`;
+                toastMessage = `ATTENZIONE! Hai sforato di ${Math.abs(diffRimanente)} Kcal. Riprova domani.`;
+            } else if (diffRimanente >= 0 && diffRimanente <= 50) {
+                // LIVELLO ORO: La precisione massima in un giorno
+                cardClass = 'card-gold';
+                cardText = '🥇 ORO (Perfetto)';
+                toastMessage = "PRECISIONE ORO! Target centrato per massimizzare il deficit.";
+            } else if (diffRimanente > 50 && diffRimanente <= 100) {
+                // LIVELLO ARGENTO: Ottima precisione
+                cardClass = 'card-silver';
+                cardText = '🥈 ARGENTO (Ottima)';
+            } else if (diffRimanente > 100 && diffRimanente <= 200) {
+                // LIVELLO BRONZO: Accettabile, ma margini
+                cardClass = 'card-bronze';
+                cardText = '🥉 BRONZO (Buona)';
+            } else if (diffRimanente > 200 && curCal > 0) {
+                // PIANO INCOMPLETO: Rischi di non mangiare abbastanza
+                cardClass = 'card-default';
+                cardText = '⚠️ INCOMPLETO';
+                toastMessage = `Mancano ancora ${diffRimanente} Kcal. Mangia per massimizzare il deficit!`;
+            }
+            
+            // Assegna la classe e il testo al badge visivo
+            badgeElement.className = `precision-card ${cardClass}`;
+            badgeElement.innerText = cardText;
+        
+
+            // Mostra il toast di celebrazione (solo per i livelli più alti e correttivi)
+            if (toastMessage) {
+                showToast(toastMessage);
+            }
+        }
+        // --- FINE LOGICA CARTE PRECISIONE ---
 
         let pct = (curCal / TGT_CAL) * 100;
         let bar = document.getElementById('calBar');
@@ -1035,9 +1234,36 @@
         setBar('prot', curP, TGT_P, 'g');
         setBar('fat', curF, TGT_F, 'g');
 
+        // --- AVVISO PROTEICO FISSO NEI MACRO (ARANCIONE) ---
+        const currentPTMinGCheck = parseFloat(localStorage.getItem('pt_min_g')) || 0;
+        let protWarningHTML = '';
+     
+        if (currentPTMinGCheck > 0 && curCal > 0) {
+            if (curP < currentPTMinGCheck) {
+                protWarningHTML = `<div style="color:var(--orange); font-size:0.8rem; font-weight:700; background:#fff5e6; padding:8px; border-radius:8px; margin-top:10px; border:1px solid var(--orange); text-align: center;">
+                            ⚠️ **Attenzione Atleta!** Quota minima proteica (${currentPTMinGCheck}g) non raggiunta. Proteggi i muscoli!
+                           </div>`;
+            } else {
+                protWarningHTML = `<div style="color:var(--success); font-size:0.8rem; font-weight:600; margin-top:10px; text-align: center;">
+                            ✅ Ottimo! Muscoli Protetti (${curP}g su ${currentPTMinGCheck}g minimi).
+                           </div>`;
+            }
+        }
+
+        const macroContainer = document.querySelector('.macros-box');
+        let protAlertElement = document.getElementById('protAlert');
+        if (!protAlertElement) {
+            protAlertElement = document.createElement('div');
+            protAlertElement.id = 'protAlert';
+            const macroGrid = macroContainer ? macroContainer.querySelector('.macro-grid') : null;
+            if (macroGrid) macroGrid.insertAdjacentElement('afterend', protAlertElement);
+        }
+        protAlertElement.innerHTML = protWarningHTML;
+        // ---------------------------------------------
+
         localStorage.setItem('foods_v3', JSON.stringify(foods));
         
-        return { curCal, curC };
+        return { curCal, curC, curP }; // Return curP for Pharmolain check
     }
 
     function setBar(type, cur, max, unit) {
@@ -1050,19 +1276,27 @@
         let n = document.getElementById('inName').value;
         let k = parseInt(document.getElementById('inCal').value);
         let c = parseInt(document.getElementById('inCarb').value)||0;
+        let p = parseInt(document.getElementById('inProt').value)||0; // NEW: Get added proteins
         
         if(n && k) {
             foods.push({
                 n, k,
                 c: c,
-                p: parseInt(document.getElementById('inProt').value)||0,
+                p: p,
                 f: parseInt(document.getElementById('inFat').value)||0
             });
             document.querySelectorAll('.add-box input').forEach(i => i.value = '');
             
             const totals = render();
             
-            checkSmartAdvice(n, k, totals.curC, TGT_C);
+            checkSmartAdvice(n, k, totals.curC, TGT_CAL);
+            
+            // --- CHECK PHARMOLAIN (After Meal) ---
+            const currentPTMinG = parseFloat(localStorage.getItem('pt_min_g')) || 0;
+            if (currentPTMinG > 0 && p >= 30 && totals.curP < currentPTMinG) {
+                // Se l'utente ha aggiunto un pasto proteico (>30g) e non ha ancora raggiunto la quota minima
+                showToast(`Pasto Ricco di Proteine! 🥩 Massimizza l'assorbimento con Pharmolain.`);
+            }
         }
     }
 
@@ -1088,7 +1322,8 @@
     // The order is important: calc loads profile, then calls render which updates the food list/macros.
     calc(); 
     renderWater();
-    checkTimeAdvice(); 
+    const finalTotals = render(); // Ensure render is called to get final values and update the UI
+    checkTimeAdvice(finalTotals.curP); // Pass final current protein count for evening check
 </script>
 </body>
 </html>
