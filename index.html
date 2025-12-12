@@ -626,18 +626,90 @@
 
     // --- FUNZIONI LOGICHE EXTRA ---
     function checkCircumference() {
-        const lastAbd = parseFloat(localStorage.getItem('last_week_abd')) || 0;
-        const lastCoscia = parseFloat(localStorage.getItem('last_week_coscia')) || 0;
-        const lastBraccio = parseFloat(localStorage.getItem('last_week_braccio')) || 0;
+        // 1. Recupera i vecchi dati (Memoria di ieri/settimana scorsa)
+        const oldAbd = parseFloat(localStorage.getItem('last_week_abd')) || 0;
+        const oldCoscia = parseFloat(localStorage.getItem('last_week_coscia')) || 0;
+        const oldBraccio = parseFloat(localStorage.getItem('last_week_braccio')) || 0;
         
-        let msg = "Compila per analisi settimanale.";
-        if(lastAbd > 0 && state.circ_abd > 0) {
-            let d = state.circ_abd - lastAbd;
-            msg = `Addome: ${d>0?'+':''}${d.toFixed(1)} cm`;
-            if (d < -0.5) showToast("✅ Ottimo! Addome ridotto.");
-            else if (d > 0.5 && ['lose_aggr','detox'].includes(state.goal)) showToast("⚠️ Addome aumentato! Gonfiore? Usa Pharmolain.");
+        // 2. Recupera i nuovi dati (Input attuali)
+        const nowAbd = state.circ_abd;
+        const nowCoscia = state.circ_coscia;
+        const nowBraccio = state.circ_braccio;
+
+        let parts = []; // Lista per il testo nel box
+        let delay = 0;  // Timer per non sovrapporre i messaggi
+
+        // -------------------------------------------------------
+        // A. CONTROLLO ADDOME
+        // -------------------------------------------------------
+        if (oldAbd > 0 && nowAbd > 0) {
+            let diffAddome = nowAbd - oldAbd; 
+            parts.push(`Addome: ${diffAddome > 0 ? '+' : ''}${diffAddome.toFixed(1)}`);
+            
+            if (diffAddome <= -0.1) {
+                // DIMINUISCE: Pharmofiller (Elasticità)
+                setTimeout(() => showToast("✅ Addome ridotto! Usa Pharmofiller per elasticità e tonicità."), delay);
+                delay += 4000; 
+            } else if (diffAddome >= 0.1) {
+                // AUMENTA: Pharmolain (Gonfiore)
+                setTimeout(() => showToast("⚠️ Addome aumentato! Gonfiore? Usa Pharmolain."), delay);
+                delay += 4000;
+            }
         }
-        document.getElementById('circAnalysis').innerText = msg;
+
+        // -------------------------------------------------------
+        // B. CONTROLLO COSCIA
+        // -------------------------------------------------------
+        if (oldCoscia > 0 && nowCoscia > 0) {
+            let diffCoscia = nowCoscia - oldCoscia;
+            parts.push(`Coscia: ${diffCoscia > 0 ? '+' : ''}${diffCoscia.toFixed(1)}`);
+            
+            if (diffCoscia <= -0.1) {
+                // DIMINUISCE: Pharmofiller (Elasticità)
+                setTimeout(() => showToast("✅ Coscia più snella! Usa Pharmofiller per elasticità e tonicità."), delay);
+                delay += 4000;
+            } else if (diffCoscia >= 0.1) {
+                // AUMENTA: PharmoVen (Circolazione)
+                setTimeout(() => showToast("🚨 Coscia aumentata! Problemi di circolazione? Usa PharmoVen."), delay);
+                delay += 4000;
+            }
+        }
+
+        // -------------------------------------------------------
+        // C. CONTROLLO BRACCIO
+        // -------------------------------------------------------
+        if (oldBraccio > 0 && nowBraccio > 0) {
+            let diffBraccio = nowBraccio - oldBraccio;
+            parts.push(`Braccio: ${diffBraccio > 0 ? '+' : ''}${diffBraccio.toFixed(1)}`);
+            
+            if (diffBraccio >= 0.1) {
+                // AUMENTA
+                if (['gain','recomp'].includes(state.goal)) {
+                    // Se l'obiettivo è MASSA -> Bene
+                    setTimeout(() => showToast("💪 Braccio in crescita! Ottimo lavoro."), delay);
+                } else {
+                    // Se l'obiettivo è DIMAGRIMENTO -> Male (Ritenzione) -> Pharmodren
+                    setTimeout(() => showToast("💧 Braccio aumentato! Ritenzione idrica? Usa Pharmodren."), delay);
+                }
+            } else if (diffBraccio <= -0.1) {
+                // DIMINUISCE: Pharmofiller (Elasticità)
+                setTimeout(() => showToast("✅ Braccio definito! Usa Pharmofiller per elasticità e tonicità."), delay);
+            }
+        }
+
+        // -------------------------------------------------------
+        // D. STAMPA A VIDEO NEL BOX
+        // -------------------------------------------------------
+        const outputBox = document.getElementById('circAnalysis');
+        if (parts.length > 0) {
+            outputBox.innerText = "Diff: " + parts.join(" | ") + " cm";
+            outputBox.style.color = "#004494"; 
+            outputBox.style.fontWeight = "600";
+        } else {
+            outputBox.innerText = "Compila oggi per vedere le differenze domani.";
+            outputBox.style.color = "#666";
+            outputBox.style.fontWeight = "400";
+        }
     }
 
         function updatePredictionStatus() {
