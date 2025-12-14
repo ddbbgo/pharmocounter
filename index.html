@@ -530,11 +530,11 @@
         let claimedKey = null;
 
         if (streakCount === 7 && !localStorage.getItem('claimed_7_days')) {
-            rewardCode = 'PHARMO7DAYS'; claimedKey = 'claimed_7_days';
+            rewardCode = 'PHARMO1100'; claimedKey = 'claimed_7_days';
         } else if (streakCount === 14 && !localStorage.getItem('claimed_14_days')) {
-            rewardCode = 'PHARMO14DAYS'; claimedKey = 'claimed_14_days';
+            rewardCode = 'PHARMO6598'; claimedKey = 'claimed_14_days';
         } else if (streakCount === 30 && !localStorage.getItem('claimed_30_days')) {
-            rewardCode = 'PHARMO30DAYS'; claimedKey = 'claimed_30_days';
+            rewardCode = 'PHARMO8756'; claimedKey = 'claimed_30_days';
             // Avvia il timer di 3 giorni solo dopo aver sbloccato l'ultimo codice
             localStorage.setItem('days_since_30_win', 1); 
         }
@@ -1219,3 +1219,4 @@ ${timerDisplay}
 </script>
 </body>
 </html>
+
