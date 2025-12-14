@@ -1113,21 +1113,40 @@
         const streakCount = parseInt(localStorage.getItem('streak_days')) || 0; 
         const daysSince30Win = parseInt(localStorage.getItem('days_since_30_win')) || 0; 
         
-        let rewardsDisplay = '--- Livelli Premiati (Vantaggi su pharmo.it) ---\n';
+                        let rewardsDisplay = '--- Livelli Premiati (Vantaggi su pharmo.it) ---\n';
         
-        // Mostra lo stato di tutti i livelli
-        rewardsDisplay += (streakCount >= 7) ? 
-            '✅ 7 Giorni (Codice Sbloccato)\n' : 
-            '🎯 7 Giorni (Prossimo Obiettivo)\n';
-            
-        rewardsDisplay += (streakCount >= 14) ? 
-            '✅ 14 Giorni (Codice Sbloccato)\n' : 
-            '🎯 14 Giorni (Prossimo Obiettivo)\n';
-            
-        rewardsDisplay += (streakCount >= 30) ? 
-            '✅ 30 Giorni (Codice Sbloccato)\n' : 
-            '🎯 30 Giorni (Prossimo Obiettivo)\n';
+        // Logica per determinare il codice massimo raggiunto
+        let maxCode = '';
+        if (streakCount >= 30) {
+            maxCode = 'PHARMO30DAYS';
+        } else if (streakCount >= 14) {
+            maxCode = 'PHARMO14DAYS';
+        } else if (streakCount >= 7) {
+            maxCode = 'PHARMO7DAYS';
+        }
+
+        // 1. Tracciamento 7 Giorni
+        if (streakCount >= 7) {
+            rewardsDisplay += `✅ 7 Giorni: ${(maxCode === 'PHARMO7DAYS') ? maxCode : 'Sbloccato (Attivo Sup.)'}\n`;
+        } else {
+            rewardsDisplay += '🎯 7 Giorni: Prossimo Obiettivo\n';
+        }
         
+        // 2. Tracciamento 14 Giorni
+        if (streakCount >= 14) {
+            rewardsDisplay += `✅ 14 Giorni: ${(maxCode === 'PHARMO14DAYS') ? maxCode : 'Sbloccato (Attivo Sup.)'}\n`;
+        } else {
+            rewardsDisplay += '🎯 14 Giorni: Prossimo Obiettivo\n';
+        }
+        
+        // 3. Tracciamento 30 Giorni
+        if (streakCount >= 30) {
+            rewardsDisplay += `✅ 30 Giorni: ${(maxCode === 'PHARMO30DAYS') ? maxCode : 'Sbloccato (Attivo Sup.)'}\n`;
+        } else {
+            rewardsDisplay += '🎯 30 Giorni: Prossimo Obiettivo\n';
+        }
+
+
         // Aggiungi il timer di scadenza (appare solo tra giorno 30 e 33)
         let timerDisplay = '';
         if (daysSince30Win > 0 && daysSince30Win <= 3) {
