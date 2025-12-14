@@ -484,7 +484,7 @@
         localStorage.setItem('platinum_streak', pStreak);
 
         if (pStreak >= 5 && !localStorage.getItem('claimed_platinum_5')) {
-            alert("💎 PLATINO SBLOCCATO! 5 giorni di precisione Oro!\n\nIl tuo premio speciale è: PHARMO5DAYS\n\nUsalo subito su pharmo.it per i tuoi prodotti preferiti!");
+            alert("💎 PLATINO SBLOCCATO! 5 giorni di precisione Oro!\n\nIl tuo premio speciale è: PHARMOSPED\n\nUsalo subito su pharmo.it per i tuoi prodotti preferiti!");
             window.open('https://www.pharmo.it', '_blank');
             localStorage.setItem('claimed_platinum_5', 'true');
         }
@@ -513,13 +513,13 @@
             let claimedKey = null;
 
             if (streakCount === 7 && !localStorage.getItem('claimed_7_days')) {
-                rewardCode = 'PHARMO7DAYS';
+                rewardCode = 'PHARMO1100';
                 claimedKey = 'claimed_7_days';
             } else if (streakCount === 14 && !localStorage.getItem('claimed_14_days')) {
-                rewardCode = 'PHARMO14DAYS';
+                rewardCode = 'PHARMO8756';
                 claimedKey = 'claimed_14_days';
             } else if (streakCount === 30 && !localStorage.getItem('claimed_30_days')) {
-                rewardCode = 'PHARMO30DAYS';
+                rewardCode = 'PHARMO6598';
                 claimedKey = 'claimed_30_days';
             }
 
