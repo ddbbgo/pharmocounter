@@ -1118,15 +1118,15 @@
         // 1. Determina il codice massimo attivo (quello che DEVE essere mostrato)
         let maxCode = '';
         if (streakCount >= 30) {
-            maxCode = 'PHARMO30DAYS';
+            maxCode = 'PHARMO1100';
         } else if (streakCount >= 14) {
-            maxCode = 'PHARMO14DAYS';
+            maxCode = 'PHARMO6598';
         } else if (streakCount >= 7) {
-            maxCode = 'PHARMO7DAYS';
+            maxCode = 'PHARMO8756';
         }
 
         // 2. Tracciamento 7 Giorni: Mostra il codice solo se è l'attivo
-        let display7 = (maxCode === 'PHARMO7DAYS') ? maxCode : 'Sbloccato';
+        let display7 = (maxCode === 'PHARMO1100') ? maxCode : 'Sbloccato';
         if (streakCount >= 7) {
             rewardsDisplay += `✅ 7 Giorni: ${display7}\n`;
         } else {
@@ -1134,7 +1134,7 @@
         }
         
         // 3. Tracciamento 14 Giorni: Mostra il codice solo se è l'attivo
-        let display14 = (maxCode === 'PHARMO14DAYS') ? maxCode : 'Sbloccato';
+        let display14 = (maxCode === 'PHARMO6598') ? maxCode : 'Sbloccato';
         if (streakCount >= 14) {
             rewardsDisplay += `✅ 14 Giorni: ${display14}\n`;
         } else {
@@ -1142,7 +1142,7 @@
         }
         
         // 4. Tracciamento 30 Giorni: Mostra il codice solo se è l'attivo
-        let display30 = (maxCode === 'PHARMO30DAYS') ? maxCode : 'Sbloccato';
+        let display30 = (maxCode === 'PHARMO8756') ? maxCode : 'Sbloccato';
         if (streakCount >= 30) {
             rewardsDisplay += `✅ 30 Giorni: ${display30}\n`;
         } else {
@@ -1223,6 +1223,7 @@ ${timerDisplay}
 </script>
 </body>
 </html>
+
 
 
 
