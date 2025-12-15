@@ -554,6 +554,15 @@
         } else {
              localStorage.removeItem('active_streak_code');
         }
+        // --- LOGICA STREAK ACQUA (Se ieri non hai vinto, azzera) ---
+        let wStreak = parseInt(localStorage.getItem('water_streak_days')) || 0;
+        let lastWin = localStorage.getItem('last_water_win_date');
+        let yest = new Date(now); yest.setDate(yest.getDate() - 1);
+        
+        // Se l'ultima vittoria non è data "ieri", hai perso la streak
+        if (lastWin !== yest.toDateString()) {
+            if (wStreak > 0) localStorage.setItem('water_streak_days', 0);
+        }
 
 
         // --- 3. Reset Dati di Giornata ---
@@ -879,6 +888,7 @@
             badge.className = `precision-card ${cardC}`; badge.innerText = cardT;
             let precLvl=0; if(cardC==='card-gold') precLvl=3; else if(cardC==='card-silver') precLvl=2; else if(cardC==='card-bronze') precLvl=1;
             localStorage.setItem('last_day_precision', precLvl);
+            localStorage.setItem('last_day_total_consumed', curCal); 
         }
 
           // 4. Avvisi Proteine (Versione compatta con "minimi")
@@ -1068,16 +1078,23 @@
         document.getElementById('waterCountDisplay').innerText = `${waterCount}/8`;
         localStorage.setItem('water_count', waterCount);
         
-        // Update Challenge Text
+        // Calcolo visivo Streak
         let ws = parseInt(localStorage.getItem('water_streak_days')) || 0;
-        let dayText = (waterCount === 8) ? "✅ Obiettivo di oggi raggiunto!" : `💧 Sfida Drenante: Giorno ${ws + 1} di 3`;
+        // Se oggi ho vinto, mostro ws, altrimenti mostro ws + 1 (il giorno corrente che sto tentando)
+        let displayDay = (localStorage.getItem('last_water_win_date') === todayStr) ? ws : ws + 1;
+        
+        let dayText = (waterCount === 8) ? "✅ Obiettivo raggiunto!" : `💧 Sfida Drenante: Giorno ${displayDay} di 3`;
         document.getElementById('waterStatus').innerText = dayText;
 
         if(waterCount===8) {
              if(localStorage.getItem('last_water_win_date') !== todayStr) {
-                 localStorage.setItem('water_streak_days', ws + 1);
+                 ws++;
+                 localStorage.setItem('water_streak_days', ws);
                  localStorage.setItem('last_water_win_date', todayStr);
-                 if(ws+1 >= 3 && !localStorage.getItem('water_reward_claimed')) document.getElementById('waterRewardModal').style.display='flex';
+                 
+                 if(ws >= 3 && !localStorage.getItem('water_reward_claimed')) {
+                     document.getElementById('waterRewardModal').style.display='flex';
+                 }
              }
         }
     }
@@ -1222,7 +1239,6 @@ ${timerDisplay}
 </script>
 </body>
 </html>
-
 
 
 
