@@ -129,31 +129,30 @@
 </head>
 <body>
 
-<div id="authGate" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:20000; flex-direction:column; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; text-align:center;">
-    <div style="max-width:360px; width:100%; padding:30px; border-radius:28px; background:#f4f9ff; border:1px solid #dbeafe; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <div style="font-size: 3rem; margin-bottom: 10px;">🛡️</div>
-        <h2 style="margin:0 0 10px 0; font-weight:800; color:#003a80;">Attivazione Gratuita</h2>
-        <p style="font-size:0.9rem; color:#555; line-height:1.5; margin-bottom:20px;">
-            Inviaci la tua <b>email</b> su WhatsApp per ricevere il codice di sblocco e iscriverti alla nostra newsletter esclusiva.
+<div id="authGate" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.98); z-index:20000; flex-direction:column; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; text-align:center; backdrop-filter:blur(10px);">
+    <div style="max-width:380px; width:100%; padding:35px 25px; border-radius:30px; background:#ffffff; border:1px solid #f0f0f5; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+        <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" width="80" style="margin-bottom: 20px; opacity: 0.9;">
+        <h2 style="margin:0 0 10px 0; font-weight:800; color:#1c1c1e; font-size: 1.6rem; letter-spacing: -0.5px;">Attiva Pharmocounter</h2>
+        <p style="font-size:0.95rem; color:#636366; line-height:1.5; margin-bottom:25px;">
+            Unisciti alla nostra community. Inviaci la tua <b>email</b> su WhatsApp per sbloccare l'app e ricevere i nostri protocolli esclusivi.
         </p>
         
-        <a href="https://wa.me/393501407554?text=Ciao%21%20Vorrei%20il%20codice%20per%20Pharmocounter%2E%20La%20mia%20mail%20%C3%A8%3A%20%0A%0AFornendo%20questo%20indirizzo%2C%20accetto%20di%20iscrivermi%20alla%20newsletter%20di%20pharmo%2Eit%20e%20ricevere%20consigli%20e%20promozioni%2E" 
+        <a href="https://wa.me/393501407554?text=%F0%9F%8D%8E%20%2AATTIVAZIONE%20PHARMOCOUNTER%2A%20%F0%9F%8D%8E%0A%0ACiao%20Team%20Pharmo%21%20%F0%9F%91%8B%20Vorrei%20ricevere%20il%20codice%20di%20sblocco%20gratuito%2E%0A%0A%F0%9F%93%A7%20%2ALa%20mia%20mail%20%C3%A8%3A%2A%20%0A%0A%E2%9C%85%20Fornendo%20questo%20indirizzo%2C%20accetto%20di%20iscrivermi%20alla%20newsletter%20di%20%2Apharmo%2Eit%2A%20per%20ricevere%20consigli%20e%20promozioni%2E" 
            target="_blank" 
-           style="background:#25D366; color:#fff; text-decoration:none; display:block; padding:16px; border-radius:14px; font-weight:700; margin-bottom:20px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);">
-           💬 Richiedi Codice e Iscriviti
+           style="background:#25D366; color:#fff; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:10px; padding:18px; border-radius:16px; font-weight:700; font-size:1.05rem; margin-bottom:20px; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);">
+           <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Richiedi Codice Gratuito
         </a>
 
-        <div style="margin:20px 0; height:1px; background:#dbeafe; position:relative;">
-            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#f4f9ff; padding:0 10px; font-size:0.7rem; color:#999; font-weight:700;">INSERISCI IL CODICE RICEVUTO</span>
+        <div style="margin:25px 0; height:1px; background:#f0f0f5; position:relative;">
+            <span style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#fff; padding:0 15px; font-size:0.75rem; color:#aeaeb2; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Inserisci Codice</span>
         </div>
 
         <input type="text" id="unlockCodeInput" placeholder="Esempio: PHARMO2026" 
-               style="width:100%; height:50px; border-radius:12px; border:1.5px solid #ccc; margin-bottom:10px; text-align:center; font-size:1.1rem; font-weight:800; letter-spacing:1px; background: #fff;">
+               style="width:100%; height:55px; border-radius:15px; border:2px solid #efeff4; margin-bottom:12px; text-align:center; font-size:1.2rem; font-weight:800; letter-spacing:1px; background:#f5f5f7; color:#1c1c1e;">
         
         <button onclick="verifyUnlockCode()" 
-                style="background:#1c1c1e; color:#fff; border:none; width:100%; padding:15px; border-radius:12px; font-weight:700; cursor:pointer; transition: transform 0.1s;"
-                onactive="this.style.transform='scale(0.98)'">
-                Sblocca Pharmocounter
+                style="background:#007aff; color:#fff; border:none; width:100%; padding:18px; border-radius:15px; font-weight:700; font-size:1rem; cursor:pointer; box-shadow: 0 10px 20px rgba(0, 122, 255, 0.2);">
+                Sblocca Ora
         </button>
     </div>
 </div>
@@ -1627,4 +1626,3 @@ ${timerDisplay}
 </script>
 </body>
 </html>
-
