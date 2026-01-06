@@ -537,8 +537,8 @@ function handleAuth() {
         if (!firstVisit) {
             localStorage.setItem('first_visit_ever', now.toString());
             if(gate) gate.style.display = 'none'; 
-            if(renewalLink) renewalLink.innerText = `🔑 Accesso Attivo: 3 gg rimanenti`;
-            
+            if(renewalLink) { renewalLink.innerText = `🔑 Accesso Attivo: 3 gg rimanenti`;
+            }
             // AGGIUNGI QUESTA RIGA: Forza la comparsa della X al primissimo avvio
             if(closeBtn) closeBtn.style.display = 'block'; 
             
@@ -549,8 +549,16 @@ function handleAuth() {
         if (timePassed < trialPeriod) {
             if(gate) gate.style.display = 'none';
             const daysLeftTrial = Math.ceil((trialPeriod - timePassed) / (24 * 60 * 60 * 1000));
-            if(renewalLink) renewalLink.innerText = `🔑 Accesso Attivo: ${daysLeftTrial} gg rimanenti`;
-            
+            if(renewalLink)  { renewalLink.innerText = `🔑 Accesso Attivo: ${daysLeftTrial} gg rimanenti`;
+                        if (daysLeftTrial === 3) {
+                renewalLink.style.color = "#ffcc00"; 
+            } else if (daysLeftTrial === 2) {
+                renewalLink.style.color = "#ff9500"; 
+            } else if (daysLeftTrial <= 1) {
+                renewalLink.style.color = "#ff3b30";
+            }
+            }
+           
             // AGGIUNGI QUESTA RIGA: Forza la comparsa della X durante i 3 giorni
             if(closeBtn) closeBtn.style.display = 'block'; 
             
@@ -563,21 +571,31 @@ function handleAuth() {
         const timeLeft = thirtyDays - (now - lastUnlock);
         const daysLeft = Math.ceil(timeLeft / (24 * 60 * 60 * 1000));
 
-        if (renewalLink) {
+                if (renewalLink) {
             if (daysLeft > 3) {
+                // PERIODI LUNGHI (Sopra i 3 giorni)
                 renewalLink.innerText = `🔑 Accesso Attivo: ${daysLeft} gg rimanenti`;
-                renewalLink.style.color = "#007aff";
-                renewalLink.style.fontWeight = "600";
-            } else if (daysLeft <= 3 && daysLeft > 1) {
-                renewalLink.innerText = `⚠️ Scadenza tra: ${daysLeft} giorni`;
-                renewalLink.style.color = "#ff9500"; 
+                renewalLink.style.color = "#007aff"; // Blu standard
+            } else if (daysLeft === 3) {
+                // 3 GIORNI ALLA FINE
+                renewalLink.innerText = `⚠️ Scadenza tra: 3 giorni (Giallo)`;
+                renewalLink.style.color = "#ffcc00"; // GIALLO
                 renewalLink.style.fontWeight = "800";
-            } else if (daysLeft === 1) {
-                renewalLink.innerText = `🚨 ULTIMO GIORNO - Rinnova ora!`;
-                renewalLink.style.color = "#ff3b30";
+            } else if (daysLeft === 2) {
+                // 2 GIORNI ALLA FINE
+                renewalLink.innerText = `🟠 Scadenza tra: 2 giorni (Arancio)`;
+                renewalLink.style.color = "#ff9500"; // ARANCIONE
                 renewalLink.style.fontWeight = "900";
+            } else if (daysLeft === 1) {
+                // ULTIMO GIORNO
+                renewalLink.innerText = `🚨 ULTIMO GIORNO - Rinnova ora!`;
+                renewalLink.style.color = "#ff3b30"; // ROSSO
+                renewalLink.style.fontWeight = "900";
+                // Aggiungiamo un piccolo effetto pulsante per l'ultimo giorno
+                renewalLink.style.textDecoration = "underline";
             }
         }
+
 
         if (timeLeft <= 0) {
             localStorage.setItem('app_unlocked_v1', 'false');
