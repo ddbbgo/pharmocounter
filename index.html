@@ -783,15 +783,39 @@ function checkCrononutrizione(calorie, carbo) {
             localStorage.setItem('calorie_bank', currentBank + saving);
         }
 
-        // --- 📊 NOVITÀ: REPORT DOMENICA & RESET LUNEDÌ ---
+        // --- 📊 REPORT SETTIMANALE & RESET ---
         let dayOfWeek = new Date().getDay(); 
-        if (dayOfWeek === 0) { // Domenica
+        
+        // Se oggi è Lunedì, facciamo il bilancio finale della settimana passata
+        if (dayOfWeek === 1) { 
+            let bank = parseFloat(localStorage.getItem('calorie_bank')) || 0;
+            let grassoPerso = Math.round(bank / 7);
+
+            if (bank > 0) {
+                let reportTesto = `📊 IL MIO TRAGUARDO SETTIMANALE PHARMO:\n\n` +
+                  `🔥 Calorie risparmiate: ${Math.round(bank)} kcal\n` +
+                  `⚖️ Grasso extra perso (stima): ~${grassoPerso}g\n\n` +
+                  `🎁 Condividi questo report ai tuoi amici o a pharmo.it per ricevere una sorpresa!\n\n` +
+                  `🍎 Inizia anche tu il tuo percorso su: tinyurl.com/pharmoit`;
+
+                // Mostra il report
+                alert(reportTesto);
+
+                // Chiede se vuole inoltrarlo su WhatsApp
+                if (confirm("Vuoi inoltrare il tuo report su WhatsApp per provare a ricevere una sorpresa?")) {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(reportTesto)}`, '_blank');
+                }
+            }
+            // Reset settimanale (lo facciamo solo di Lunedì dopo il report)
+            localStorage.setItem('calorie_bank', 0);
+
+        } else if (dayOfWeek === 0) {
+            // Se è domenica, diamo solo un piccolo incoraggiamento (opzionale)
             setTimeout(() => {
-                alert("📊 REPORT DOMENICALE PHARMO: \nQuesta settimana il tuo salvadanaio ha accumulato calorie preziose. Se i risultati tardano, ricorda che Pharmofit accelera il tuo deficit!");
-            }, 1000);
-        } else if (dayOfWeek === 1) { // Lunedì
-            localStorage.setItem('calorie_bank', 0); // Reset settimanale del bank
+                showToast("📊 Domani mattina riceverai il tuo Report Settimanale completo!");
+            }, 2000);
         }
+
 
         // --- 1. Aggiornamento Deficit & Platino Check (Originale) ---
         const daySuccess = lastConsumed >= lastBMR;
