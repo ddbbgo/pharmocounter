@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pharmocounter</title>
     <style>
+    @keyframes crownPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+/* Applica l'effetto se vuoi che l'emoji della corona "pulsi" nel toast */
         :root {
             --bg-color: #f2f2f7; --card-bg: #ffffff; --text-main: #000000; --text-sec: #8e8e93;
             --accent: #007aff; --danger: #ff3b30; --warn: #ffcc00; --orange: #ff9500; --success: #34c759;
@@ -200,9 +206,12 @@
         <span id="closeAuthBtn" class="close-auth" onclick="document.getElementById('authGate').style.display='none'">&times;</span>
         <div style="font-size: 3.5rem; margin-bottom: 10px;">🍎</div>
         <h2 style="margin:0 0 10px 0; font-weight:800; color:#1c1c1e; font-size: 1.6rem;">Attiva Pharmocounter</h2>
-        <p style="font-size:0.95rem; color:#636366; line-height:1.5; margin-bottom:25px;">
-            Unisciti alla community. Inviaci la tua <b>email</b> su WhatsApp per <b>sbloccare</b> l'app gratuitamente, <b>iscriverti</b> alla nostra newsletter e <b>iniziare</b> a tracciare in modo intelligente quello che mangi.
-        </p>
+<p style="font-size:0.95rem; color:#636366; line-height:1.5; margin-bottom:25px;">
+    Unisciti alla community! Inviaci la tua <b>email</b> su WhatsApp per <b>sbloccare</b> l'app gratuitamente e iscriverti alla nostra newsletter.
+    <br><br>
+    <span style="color:#ff9500; font-weight:700;">🚀 VUOI LE FUNZIONI PRO?</span><br>
+    Effettua un ordine su <b>pharmo.it</b>: riceverai nel pacco il codice per sbloccare il <b>Digiuno Intermittente</b>, il <b>Salvadanaio</b>, il <b>Protocollo Pro</b>, la <b>Data Obiettivo</b>, l'<b>Analisi Misure</b> e i <b>Report PRO</b>!
+</p>
         <a href="https://wa.me/393501407554?text=%F0%9F%8D%8E%20%2AATTIVAZIONE%20PHARMOCOUNTER%2A%20%F0%9F%8D%8E%0A%0ACiao%20Team%20Pharmo%21%20%F0%9F%91%8B%20Vorrei%20ricevere%20il%20codice%20di%20sblocco%20gratuito%2E%0A%0A%F0%9F%93%A7%20%2ALa%20mia%20mail%20%C3%A8%3A%2A%20%0A%0A%E2%9C%85%20Fornendo%20questo%20indirizzo%2C%20accetto%20di%20iscrivermi%20alla%20newsletter%20di%20%2Apharmo%2Eit%2A%20per%20ricevere%20consigli%20e%20promozioni%2E" 
            target="_blank" class="btn-wa">
            <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Richiedi Codice Gratuito
@@ -300,6 +309,28 @@
                     <option value="gain">📈 Aumento Muscolare (+10%)</option>
                 </select>
             </div>
+<div id="premiumProtocolArea" style="margin: 20px auto; padding: 18px; background: #fffdf0; border: 1px solid #ffeebb; border-radius: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 380px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    
+    <div id="premiumLockOverlay" onclick="showPremiumAd()" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,252,240,0.92); z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(2px);">
+        <span style="font-size: 1.4rem; margin-bottom: 4px;">🔒</span>
+        <span style="color: #e67e22; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">Sblocca Metodo Shock PRO</span>
+    </div>
+
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+        <span id="goldBadge" style="background: #ccc; color: white; font-size: 0.6rem; font-weight: 900; padding: 3px 10px; border-radius: 50px; text-transform: uppercase;">Status Base</span>
+    </div>
+    
+    <label style="color:#e67e22; font-weight:800; font-size:0.8rem; display:block; margin-bottom:10px; text-align: center;">PROTOCOLLO METABOLICO PRO</label>
+
+    <select id="advProtocol" onchange="updateProtocolDesc()" style="width: 100%; border: 1px solid #ccc; font-weight: 700; border-radius: 12px; padding: 10px; color: #999; background: white; appearance: none; -webkit-appearance: none; text-align: center; text-align-last: center;">
+        <option value="none">✨ Nessuno (Standard)</option>
+        <option value="shock">👑 🌊 Metodo Shock Metabolico</option>
+    </select>
+
+    <div id="protocolDesc" style="margin: 15px auto 0 auto; font-size: 0.8rem; color: #5d4037; line-height: 1.5; text-align: center !important; width: 90%; max-width: 300px;">
+    Seleziona il protocollo per attivare il calcolo automatico dei macro.
+</div>
+</div> 
 
 <details class="card" style="grid-column: 1 / -1; margin-top: 10px; padding: 15px; background: #f0f4f8; border: 1px solid #dbeafe;">
     <summary style="font-size: 0.9rem; color: #004494; font-weight: 700;">🎯 Obiettivi & Misure <span style="font-weight:400; opacity:0.7;">(Opzionali)</span></summary>
@@ -512,11 +543,177 @@
 </div>
 
 <script>
+function showPremiumAd() {
+    alert(
+        "🚀 POTENZIA IL TUO METABOLISMO\n\n" +
+        "I Protocolli Avanzati (Carb Cycling e Metodo Shock) sono riservati ai clienti Pharmo Gold.\n\n" +
+        "Questi piani automatizzano i tuoi macro ogni giorno per evitare stalli e massimizzare i risultati dei prodotti Pharmo.\n\n" +
+        "Trovi il codice di sblocco all'interno del tuo pacco d'ordine su pharmo.it!"
+    );
+    window.open('https://www.pharmo.it', '_blank');
+}
+
+// Chiama questa funzione dentro handleAuth() o al caricamento
+function checkPremiumStatus() {
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    const overlay = document.getElementById('premiumLockOverlay');
+    const badge = document.getElementById('goldBadge');
+    const select = document.getElementById('advProtocol');
+    const desc = document.getElementById('protocolDesc');
+
+    if (isPremium) {
+        if (overlay) overlay.style.display = 'none';
+        if (badge) {
+            badge.style.background = "linear-gradient(135deg, #FFD700, #FFA500)";
+            badge.innerText = "STATUS GOLD 👑";
+        }
+        if (select) {
+            select.style.borderColor = "#FF9500"; // Arancio Pharmo
+            select.style.color = "#5d4037"; // Testo scuro leggibile
+        }
+        if (desc) {
+            desc.style.color = "#5d4037";
+            desc.style.borderColor = "#FFD700";
+        }
+    }
+}
+
+
+const protocolDailyMessages = {
+    "shock": {
+        "work": "🌊 Giorno Light: Stiamo attivando la lipolisi. Mantieni i carboidrati bassi!",
+        "rest": "🚀 Giorno Boost! Alza i carboidrati per risvegliare il metabolismo."
+    },
+    "atleta_cut": {
+        "work": "✂️ Low Carb Day: Focus sulla definizione. Proteine alte per i muscoli!",
+        "rest": "🍚 Ricarica Strategica: Rifornisci il glicogeno senza esagerare."
+    },
+    "cut_agg": {
+        "work": "🔥 Fase d'Urto: Carboidrati al minimo. Il corpo sta bruciando riserve profonde!",
+        "rest": "🔋 Ricarica Totale: Goditi i carboidrati, servono a resettare gli ormoni."
+    },
+    "recomp": {
+        "work": "🔄 Giorno ON: Carboidrati alti per spingere l'allenamento e crescere!",
+        "rest": "💧 Giorno OFF: Focus sui grassi buoni e recupero muscolare."
+    },
+    "bulk": {
+        "work": "💪 Spinta Muscolare: Surplus di carbo per massimizzare l'anabolismo!",
+        "rest": "⚖️ Mantenimento Pulito: Cresciamo senza accumulare grasso."
+}
+};
+
+// Dizionario delle descrizioni
+const protocolDescriptions = {
+    "none": "Scegli il protocollo per attivare il calcolo automatico dei macro.",
+    "shock": "🌊 IL METODO SHOCK: alterna giorni 'Light' a giorni 'Boost' nel weekend. È la strategia Pharmo per evitare stalli metabolici e massimizzare la lipolisi."
+};
+
+function updateProtocolDesc() {
+    const val = document.getElementById('advProtocol').value;
+    const goal = document.getElementById('goal').value;
+    const descBox = document.getElementById('protocolDesc');
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+
+    // BLOCCO DI SICUREZZA PER NON-PREMIUM
+    if (val === 'shock' && !isPremium) {
+        showToast("👑 Funzione PRO: Target calorie aggiornato per oggi!");
+        document.getElementById('advProtocol').value = 'none'; 
+        showPremiumAd(); 
+        return; 
+    }
+
+    let text = "";
+    
+    // --- CASO 1: NESSUNO (Disattivazione) ---
+    if (val === 'none') {
+        text = "Scegli il protocollo per attivare il calcolo automatico dei macro.";
+        descBox.style.color = "#aaa";
+        descBox.style.fontWeight = "400";
+        localStorage.setItem('active_protocol_v1', 'none'); 
+    } 
+    // --- CASO 2: ATTIVATO (Shock o Carb Cycling) ---
+    else if (val === 'shock') {
+        // ATLETA / MASSA (Carb Cycling)
+        if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(goal)) {
+            text = `
+                <strong style="color:#e67e22">⚡ CARB CYCLING (Zig-Zag)</strong><br><br>
+                <b>Come funziona:</b> Alterna giorni <b>High Carb</b> (Mercoledì e Weekend) per spingere in allenamento a giorni <b>Low Carb</b> per definire a riposo.<br><br>
+                <b>Obiettivo:</b> Massimizza l'energia quando serve e brucia grasso quando sei fermo. Ottimizza la sensibilità insulinica.
+            `;
+        } 
+        // DIMAGRIMENTO / DETOX (Metodo Shock)
+        else {
+            text = `
+                <strong style="color:#007aff">🌊 METODO SHOCK (5+2)</strong><br><br>
+                <b>Come funziona:</b> 5 giorni di <b>Scarico</b> (Lun-Ven) per svuotare le riserve di glicogeno, seguiti da 2 giorni di <b>Ricarica</b> (Weekend).<br><br>
+                <b>Obiettivo:</b> Inganna il metabolismo per evitare stalli e massimizza la lipolisi (brucia-grassi) durante la settimana.
+            `;
+        }
+        
+        descBox.style.color = "#5d4037"; // Colore scuro leggibile
+        descBox.style.fontWeight = "400"; // Peso normale perché usiamo il bold dentro
+        
+        localStorage.setItem('active_protocol_v1', 'shock');
+        showToast(text.includes("CARB") ? "👑 ⚡ Carb Cycling Attivato!" : "👑 🌊 Metodo Shock Attivato!");
+    }
+
+    // NOTA: Qui usiamo innerHTML per leggere i tag <br> e <b>
+    descBox.innerHTML = text;
+    calc(); 
+}
+
+
+
+// Integrazione nella funzione calc()
+// Trova il punto in cui calcoli TGT_C, TGT_P, TGT_F e aggiungi questo:
+function applyProtocolLogic(targetC, targetP, targetF) {
+    const activeProt = localStorage.getItem('active_protocol_v1') || 'none';
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    // Recuperiamo l'obiettivo per distinguere Shock da Atleta
+    const currentGoal = document.getElementById('goal').value; 
+    const isAthlete = ['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(currentGoal);
+
+    // Se non è attivo il protocollo o non è Premium, ritorna i valori base
+    if (activeProt !== 'shock' || !isPremium) {
+        return { c: targetC, p: targetP, f: targetF };
+    }
+
+    const day = new Date().getDay(); // 0=Dom, 1=Lun, 2=Mar, 3=Mer, 4=Gio, 5=Ven, 6=Sab
+    let modC = 1;
+
+    if (isAthlete) {
+        // --- ⚡ LOGICA ATLETA (CARB CYCLING: Zig-Zag) ---
+        // Giorni ALTI: Mercoledì (3), Sabato (6), Domenica (0)
+        // Giorni BASSI: Lun, Mar, Gio, Ven
+        if (day === 3 || day === 6 || day === 0) {
+            modC = 1.25; // +25% (Boost Allenamento)
+        } else {
+            modC = 0.85; // -15% (Definizione/Riposo)
+        }
+    } else {
+        // --- 🌊 LOGICA DIMAGRIMENTO (METODO SHOCK: 5+2) ---
+        // Giorni ALTI: Sabato (6), Domenica (0)
+        // Giorni BASSI: Lun - Ven
+        if (day === 6 || day === 0) {
+            modC = 1.20; // +20% (Ricarica Weekend)
+        } else {
+            modC = 0.80; // -20% (Scarico Totale)
+        }
+    }
+
+    return {
+        c: Math.round(targetC * modC),
+        p: targetP, // Le proteine restano fisse per proteggere i muscoli
+        f: targetF
+    };
+}
+
 
 // ======================================================
-// 🔑 CHIAVE DI ACCESSO MENSILE
+// 🔑 CHIAVI DI ACCESSO
 // ======================================================
-const CHIAVE_ACCESSO_MENSILE = "PHARMOWIN26"; 
+const CHIAVE_BASIC = "PHARMOWIN26";   // Accesso Base (Newsletter)
+const CHIAVE_PRO = "GOLDPHARMO";      // Accesso PRO (Tutto sbloccato)
 
 function handleAuth() {
     const isUnlocked = localStorage.getItem('app_unlocked_v1');
@@ -530,7 +727,7 @@ function handleAuth() {
     const trialPeriod = 3 * 24 * 60 * 60 * 1000; 
     const now = Date.now();
 
-        // --- 1. LOGICA TRIAL 3 GIORNI ---
+        // --- 1. LOGICA 3 GIORNI ---
     if (isUnlocked !== 'true') {
         let firstVisit = localStorage.getItem('first_visit_ever');
         
@@ -619,23 +816,37 @@ function handleAuth() {
         }
         if(renewalLink) renewalLink.innerText = "🔑 Clicca per Attivare Pharmocounter";
     }
+    if (localStorage.getItem('app_premium_v1') === 'true') {
+    document.getElementById('premiumProtocolArea').style.display = 'block';
 }
 
-
+}
 
 function verifyUnlockCode() {
     const entered = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
-    if (entered === CHIAVE_ACCESSO_MENSILE) {
+    if (entered === CHIAVE_PRO || entered === CHIAVE_BASIC) {
         localStorage.setItem('app_unlocked_v1', 'true');
+        
+        // Se inserisce GOLDPHARMO, sblocca le funzioni Premium
+        if(entered === CHIAVE_PRO) {
+            localStorage.setItem('app_premium_v1', 'true');
+            checkPremiumStatus(); // <--- 1. AGGIUNTO QUI: Toglie l'overlay subito
+        }
+        
         localStorage.setItem('last_unlock_timestamp', Date.now());
-        localStorage.removeItem('first_visit_ever'); // Pulizia trial
+        localStorage.removeItem('first_visit_ever');
+        
         document.getElementById('authGate').style.display = 'none';
         showToast("✅ Accesso attivato!");
-        handleAuth(); 
+        
+        // 2. IMPORTANTE: Ricarica la pagina per attivare le nuove calorie e i protocolli
+        setTimeout(() => location.reload(), 1000); 
     } else {
         alert("Chiave errata. Richiedila su WhatsApp!");
     }
 }
+
+
 
 // --- NUOVE LOGICHE: SALVADANAIO E CRONONUTRIZIONE ---
 
@@ -644,26 +855,53 @@ function getBankBalance() {
 }
 
 function useBankCalories() {
-    let currentBank = getBankBalance();
-    if (currentBank <= 0) {
-        alert("Il tuo salvadanaio è vuoto! Risparmia calorie nei prossimi giorni per accumularle.");
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    const currentBank = Math.round(getBankBalance());
+
+    // --- LOGICA UTENTE BASE (Marketing) ---
+    if (!isPremium) {
+        alert(
+            "🔒 FUNZIONE PREMIUM: IL SALVADANAIO\n\n" +
+            "Il Salvadanaio ti permette di accumulare le calorie che non mangi durante la settimana per usarle quando vuoi.\n\n" +
+            "Sblocca questa funzione avanzata inserendo il codice GOLD che trovi nel tuo pacco d'ordine su Pharmo.it!"
+        );
+        window.open('https://www.pharmo.it', '_blank');
         return;
     }
-    
-    let amountToUse = prompt(`Hai ${Math.round(currentBank)} kcal nel salvadanaio. Quante vuoi usarne oggi?`, "200");
-    amountToUse = parseInt(amountToUse);
 
-    if (amountToUse > 0 && amountToUse <= currentBank) {
-        // Aggiunge le calorie al target di oggi nel localStorage temporaneo
+    // --- LOGICA UTENTE PREMIUM (Istruzioni + Prelievo) ---
+    const spiegazionePremium = 
+        "💰 IL TUO SALVADANAIO CALORIE\n\n" +
+        "In questo spazio si accumulano le calorie che non hai consumato nei giorni scorsi.\n\n" +
+        "• COME FUNZIONA: Se finisci la giornata sotto il tuo target, l'avanzo viene salvato qui ogni mattina alle 04:00.\n\n" +
+        "• A COSA SERVE: Puoi usare questo 'tesoretto' per concederti uno sgarro o un pasto più abbondante oggi senza rovinare i progressi.\n\n" +
+        "• SCADENZA: Il salvadanaio si azzera ogni Lunedì mattina per iniziare una nuova settimana.\n\n" +
+        "----------------------------------\n" +
+        "ATTUALMENTE DISPONIBILI: " + currentBank + " kcal\n" +
+        "----------------------------------";
+
+    alert(spiegazionePremium);
+    
+    if (currentBank <= 0) {
+        alert("Il tuo salvadanaio è attualmente vuoto. Risparmia qualche caloria oggi per trovarla qui domani mattina!");
+        return;
+    }
+
+    let amountToUse = prompt(`Quante kcal vuoi prelevare dal tuo tesoretto di ${currentBank} kcal?`, "200");
+    let amount = parseInt(amountToUse);
+
+    if (amount > 0 && amount <= currentBank) {
         let extra = parseFloat(localStorage.getItem('extra_today')) || 0;
-        localStorage.setItem('extra_today', extra + amountToUse);
-        localStorage.setItem('calorie_bank', currentBank - amountToUse);
-        showToast(`✅ Prelevate ${amountToUse} kcal! Il tuo target odierno è aumentato.`);
-        location.reload(); // Ricarica per aggiornare i calcoli
-    } else {
-        alert("Quantità non valida.");
+        localStorage.setItem('extra_today', extra + amount);
+        localStorage.setItem('calorie_bank', currentBank - amount);
+        showToast(`👑 Bonus di ${amount} kcal aggiunto al target odierno!`);
+        setTimeout(() => location.reload(), 1200);
+    } else if (amount > currentBank) {
+        alert("Errore: Non puoi prelevare più di quanto hai accumulato!");
     }
 }
+
+
 
 function checkCrononutrizione(calorie, carbo) {
     const ora = new Date().getHours();
@@ -805,7 +1043,13 @@ function checkCrononutrizione(calorie, carbo) {
         let dayOfWeek = new Date().getDay(); 
         
         // Se oggi è Lunedì, facciamo il bilancio finale della settimana passata
-        if (dayOfWeek === 1) { 
+ if (dayOfWeek === 1) { 
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    if (!isPremium) {
+        alert("📊 REPORT SETTIMANALE DISPONIBILE!\n\nAbbiamo analizzato i tuoi dati. Per vedere il report completo dei tuoi progressi devi essere un utente PRO.");
+        localStorage.setItem('calorie_bank', 0);
+      
+} // Questa chiude il lunedì
             let bank = parseFloat(localStorage.getItem('calorie_bank')) || 0;
             let grassoPerso = Math.round(bank / 7);
 
@@ -930,12 +1174,23 @@ function checkCrononutrizione(calorie, carbo) {
 
     // --- FUNZIONI UTILI ---
         function showToast(msg) {
-        const t = document.getElementById('smartToast');
-        document.getElementById('toastMsg').innerText = msg;
-        t.classList.add('toast-visible');
-        // Ora rimane visibile per 10 secondi (10000 ms)
-        setTimeout(() => t.classList.remove('toast-visible'), 10000); 
+    const t = document.getElementById('smartToast');
+    const toastMsg = document.getElementById('toastMsg');
+    
+    // Se il messaggio contiene la corona, aggiungiamo un bordo dorato temporaneo
+    if (msg.includes('👑')) {
+        t.style.border = "2px solid #FFD700";
+        t.style.boxShadow = "0 10px 25px rgba(255, 215, 0, 0.3)";
+    } else {
+        t.style.border = "none";
+        t.style.boxShadow = "0 10px 20px rgba(0,0,0,0.25)";
     }
+
+    toastMsg.innerText = msg;
+    t.classList.add('toast-visible');
+    setTimeout(() => t.classList.remove('toast-visible'), 10000); 
+}
+
     
     function copyCode(el) { navigator.clipboard.writeText(el.innerText); alert("Codice copiato!"); }
     function closeReward(id) { 
@@ -1054,7 +1309,14 @@ function checkCrononutrizione(calorie, carbo) {
 
         // --- GESTIONE DIGIUNO INTERMITTENTE (AGGIORNATA) ---
     function updateFastingUI() {
-        const mode = document.getElementById('fastingMode').value;
+    const mode = document.getElementById('fastingMode').value;
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+
+    if (mode !== 'none' && !isPremium) {
+        alert("🔒 MODALITÀ FASTING PREMIUM\n\nI protocolli di digiuno sono disponibili solo per i membri PRO. Effettua un ordine su Pharmo.it per sbloccarli!");
+        document.getElementById('fastingMode').value = 'none';
+        return;
+    }
         const startInput = document.getElementById('fastingStart').value;
         
         // Elementi da aggiornare
@@ -1155,90 +1417,64 @@ function checkCrononutrizione(calorie, carbo) {
     }
 
 
-    // --- LOGICA PRINCIPALE (CALC) ---
-    function calc() {
-        // Aggiorna Stato da Input
+        function calc() {
+        // 1. RECUPERO DATI (Input Utente)
         state.g = document.getElementById('gender').value;
         state.age = parseFloat(document.getElementById('age').value);
         state.w = parseFloat(document.getElementById('weight').value);
         state.h = parseFloat(document.getElementById('height').value);
         state.act = parseFloat(document.getElementById('act').value);
         state.goal = document.getElementById('goal').value;
+                // --- FIX NOMI DINAMICI (Shock vs Carb Cycling) ---
+        const shockOpt = document.querySelector('#advProtocol option[value="shock"]');
+        if (shockOpt) {
+            // Se l'obiettivo è da Atleta, Massa o Ricomposizione -> Si chiama Carb Cycling
+            if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(state.goal)) {
+                shockOpt.innerText = "👑 ⚡ Carb Cycling Pro"; 
+            } else {
+                // Altrimenti (Dimagrimento, Detox, Beauty) -> Si chiama Metodo Shock
+                shockOpt.innerText = "👑 🌊 Metodo Shock Metabolico"; 
+            }
+        }
+
         state.targetW = parseFloat(document.getElementById('targetWeightInput').value) || 0;
         state.targetD = document.getElementById('targetDateInput').value || '';
         state.circ_abd = parseFloat(document.getElementById('circ_abd').value) || 0;
         state.circ_coscia = parseFloat(document.getElementById('circ_coscia').value) || 0;
         state.circ_braccio = parseFloat(document.getElementById('circ_braccio').value) || 0;
+        
+        // Salva profilo
         localStorage.setItem('profile_v3', JSON.stringify(state));
 
-          // --- SUGGERITORE PESO COMPATTO ---
+        // 2. SUGGERITORE PESO (Grafica)
         const suggestionBox = document.getElementById('idealWeightSuggestion');
-        const athleteCut = ['lose_athlete_15', 'lose_cons', 'recomp']; 
-        const bulking = ['gain']; 
-        
         if (suggestionBox) {
-            suggestionBox.style.display = 'block'; // Forza visibilità
-            
-            if (athleteCut.includes(state.goal)) {
-                // ATLETA (Arancione)
-                suggestionBox.innerHTML = "🦵 <b>Atleta:</b> Il peso è relativo. Conta la composizione corporea (specchio/misure).";
-                suggestionBox.style.background = "#fff5e6"; 
-                suggestionBox.style.color = "#b35900"; 
-                suggestionBox.style.border = "1px solid #ffcc00";
-
-            } else if (bulking.includes(state.goal)) {
-                // MASSA (Verde)
+            suggestionBox.style.display = 'block';
+            if (['lose_athlete_15', 'lose_cons', 'recomp'].includes(state.goal)) {
+                suggestionBox.innerHTML = "🦵 <b>Atleta:</b> Il peso è relativo. Conta la composizione corporea.";
+                suggestionBox.style.background = "#fff5e6"; suggestionBox.style.color = "#b35900"; suggestionBox.style.border = "1px solid #ffcc00";
+            } else if (['gain'].includes(state.goal)) {
                 suggestionBox.innerHTML = "💪 <b>Massa:</b> Punta a salire di peso pulito.";
-                suggestionBox.style.background = "#d4edda"; 
-                suggestionBox.style.color = "#155724";
-                suggestionBox.style.border = "1px solid #34c759";
-
+                suggestionBox.style.background = "#d4edda"; suggestionBox.style.color = "#155724"; suggestionBox.style.border = "1px solid #34c759";
             } else {
-                // STANDARD (Blu)
-                const hM = state.h / 100; 
-                if (hM > 0) {
-                    const minW = Math.round(18.5 * hM * hM);
-                    const maxW = Math.round(24.9 * hM * hM);
-                    suggestionBox.innerHTML = `💡 Range Salute: <b>${minW} - ${maxW} kg</b>`;
-                    suggestionBox.style.background = "#eef7ff"; 
-                    suggestionBox.style.color = "#004494";
-                    suggestionBox.style.border = "1px solid #cceeff";
-                }
+                const hM = state.h / 100;
+                const minW = Math.round(18.5 * hM * hM);
+                const maxW = Math.round(24.9 * hM * hM);
+                suggestionBox.innerHTML = `💡 Range Salute: <b>${minW} - ${maxW} kg</b>`;
+                suggestionBox.style.background = "#eef7ff"; suggestionBox.style.color = "#004494"; suggestionBox.style.border = "1px solid #cceeff";
             }
         }
 
-        // BMR & TDEE
+        // 3. CALCOLO METABOLISMO (BMR & TDEE)
         let s = (10 * state.w) + (6.25 * state.h) - (5 * state.age);
         BMR = (state.g === 'm') ? s + 5 : s - 161;
         TDEE = Math.round(BMR * state.act);
 
-              // Goal Logic
-        let adj = { 'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 'maintain': 1.0, 'gain': 1.10 };
-        TGT_CAL = Math.round(TDEE * adj[state.goal]);
-        if (TGT_CAL < BMR) TGT_CAL = Math.round(BMR);
-        TGT_CAL += (parseFloat(localStorage.getItem('extra_today')) || 0);
-        // Nuovo Limite Minimo Catabolismo (20% sotto TDEE, ma mai sotto BMR)
-        TGT_MIN_KCAL = Math.max(Math.round(TDEE * 0.80), BMR);
-        
-                // --- BLOCCO DATA DI SICUREZZA (RIPRISTINATO) ---
-        if (state.targetW > 0 && state.w > state.targetW) {
-            let weightGap = state.w - state.targetW;
-            let kcalGapTotal = weightGap * KCAL_PER_KG_FAT;
-            let minDaysNeeded = Math.ceil(kcalGapTotal / MAX_SAFE_DAILY_DEFICIT);
-            
-            let earliestDate = new Date(Date.now() + minDaysNeeded * SECONDS_IN_DAY * 1000);
-            let minDateString = earliestDate.toISOString().split('T')[0];
-            
-            document.getElementById('targetDateInput').setAttribute('min', minDateString);
-        } else {
-            document.getElementById('targetDateInput').removeAttribute('min');
-        }
-        // -----------------------------------------------
-
-        // Text & Macros
+        // 4. DEFINIZIONE OBIETTIVI E VARIABILI (CORRETTO: Prima definisco le variabili!)
         let p_r, c_r, f_r, gTxt, sTit, sDes;
         let reqHighProt = false;
-
+        
+        // Imposto le percentuali PRIMA di fare i calcoli
         if (state.goal.startsWith('lose')) {
             sTit = "Protocollo Total Body 3-Fasi"; sDes = stackLoss;
             if (state.goal === 'lose_aggr') { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="Perdita Peso Standard (-20%)"; reqHighProt=false; }
@@ -1246,73 +1482,90 @@ function checkCrononutrizione(calorie, carbo) {
             else { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="Atleta Cut Conservativo (-10%)"; reqHighProt=true; }
         } else if (state.goal === 'recomp') {
             c_r=0.35; p_r=0.35; f_r=0.3; gTxt="Ricomposizione Corporea"; sTit="Protocollo Recomp"; sDes=stackRecomp; reqHighProt=true;
-                } else {
-            // Defaults for Detox, Beauty, Maintain, Gain
+        } else {
+            // Defaults (Detox, Beauty, Maintain, Gain)
             c_r=0.5; p_r=0.2; f_r=0.3; 
             if(state.goal==='detox') { gTxt="Detox (-5%)"; sTit="Protocollo Detox"; sDes=stackDetox; }
             else if(state.goal==='beauty') { gTxt="Beauty (Mantenimento)"; sTit="Protocollo Glow"; sDes=stackBeauty; c_r=0.45; p_r=0.25; }
             else if(state.goal==='gain') { 
-                gTxt="Surplus (+10%)"; 
-                sTit="Protocollo Struttura"; 
-                sDes=stackGain; 
-                c_r=0.45; // Abbassiamo leggermente i carboidrati (da 0.5 a 0.45)
-                p_r=0.30; // Alziamo le proteine (da 0.2 a 0.3) per garantire il superamento del minimo
-                reqHighProt = true; 
+                gTxt="Surplus (+10%)"; sTit="Protocollo Struttura"; sDes=stackGain; 
+                c_r=0.45; p_r=0.30; reqHighProt = true; 
             }
             else { gTxt="Mantenimento"; sTit="Protocollo Definizione"; sDes=stackGain; }
         }
 
-        // Soglia Proteica Minima (Solo per Atleti/Recomp)
+        // 5. CALCOLO CALORIE BASE
+        let adj = { 
+            'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 
+            'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 
+            'maintain': 1.0, 'gain': 1.10 
+        };
+        TGT_CAL = Math.round(TDEE * adj[state.goal]);
+
+        // 6. CALCOLO MACRO BASE (Ora c_r, p_r esistono!)
+        let baseC = Math.round((TGT_CAL * c_r) / 4);
+        let baseP = Math.round((TGT_CAL * p_r) / 4);
+        let baseF = Math.round((TGT_CAL * f_r) / 9);
+
+        // 7. APPLICA LOGICA PROTOCOLLO (Metodo Shock)
+        const finalMacros = applyProtocolLogic(baseC, baseP, baseF);
+        TGT_C = finalMacros.c;
+        TGT_P = finalMacros.p;
+        TGT_F = finalMacros.f;
+
+        // 8. RICALCOLO DINAMICO CALORIE
+        TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9);
+
+        // 9. CONTROLLO PROTEINE MINIME
         PT_MIN_G = reqHighProt ? Math.round(state.w * PT_MIN_MULTIPLIER) : 0;
         localStorage.setItem('pt_min_g', PT_MIN_G);
-
-                // Aggiornamento UI Calcoli
-        TGT_C = Math.round((TGT_CAL * c_r)/4); 
-        TGT_P = Math.round((TGT_CAL * p_r)/4); 
-        TGT_F = Math.round((TGT_CAL * f_r)/9);
-
-        // --- PARACADUTE: Il Target non può mai essere inferiore al Minimo ---
+        
+        // Paracadute Proteico
         if (reqHighProt && TGT_P < PT_MIN_G) {
-            TGT_P = PT_MIN_G + 10; // Forza il target a essere 10g sopra il minimo
+            TGT_P = PT_MIN_G + 10; 
+            TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9); // Ricalcola calorie se alziamo le proteine
         }
 
-        document.getElementById('shopTitle').innerText = sTit; document.getElementById('shopDesc').innerHTML = sDes;
-        document.getElementById('targetDisplay').innerText = TGT_CAL;
+        // 10. AGGIUNTA SALVADANAIO E LIMITI SICUREZZA
+        TGT_CAL += (parseFloat(localStorage.getItem('extra_today')) || 0);
+        
+        if (TGT_CAL < BMR) TGT_CAL = Math.round(BMR);
+        TGT_MIN_KCAL = Math.max(Math.round(TDEE * 0.80), BMR);
+
+        // 11. AGGIORNA VISUALIZZAZIONE (UI)
+        document.getElementById('shopTitle').innerText = sTit; 
+        document.getElementById('shopDesc').innerHTML = sDes;
+        document.getElementById('targetDisplay').innerText = Math.round(TGT_CAL);
         document.getElementById('scientificData').innerHTML = `Metabolismo Basale (BMR): <b>${Math.round(BMR)}</b> kcal<br>Fabbisogno Totale (TDEE): <b>${TDEE}</b> kcal<br>Piano: <b>${gTxt}</b>`;
 
-        // BMR Bar Marker
+        // Barra BMR
         let bmrPct = Math.min((BMR / TGT_CAL) * 100, 95);
         document.getElementById('bmrMarker').style.left = bmrPct + "%";
         document.getElementById('bmrTag').style.left = bmrPct + "%";
 
-        // Visibilità Braccio
+        // Braccio Input
         const armWrap = document.getElementById('braccio_input_wrapper');
         if(armWrap) armWrap.style.display = ['gain', 'recomp', 'lose_athlete_15', 'lose_cons'].includes(state.goal) ? 'block' : 'none';
 
-        // Analisi Previsionale e Misure
+        // Dashboard Proteine
+        const protDashArea = document.getElementById('proteinDashboardArea');
+        if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(state.goal)) {
+            protDashArea.style.display = 'block';
+            document.getElementById('protMinLabel').innerText = PT_MIN_G;
+            let markerPos = Math.min((PT_MIN_G / TGT_P) * 100, 95);
+            document.getElementById('protMinMarker').style.left = markerPos + "%";
+        } else {
+            protDashArea.style.display = 'none';
+        }
+
+        // Funzioni finali
         updatePredictionStatus();
         checkCircumference();
         render();
         localStorage.setItem('last_day_target', TGT_CAL);
-        localStorage.setItem('last_day_bmr', BMR); // <--- NUOVA RIGA
-        
-        // --- LOGICA VISIBILITÀ BARRA PROTEINE DASHBOARD ---
-const protDashArea = document.getElementById('proteinDashboardArea');
-const highProtGoals = ['lose_athlete_15', 'lose_cons', 'recomp', 'gain'];
-
-if (highProtGoals.includes(state.goal)) {
-    protDashArea.style.display = 'block';
-    document.getElementById('protMinLabel').innerText = PT_MIN_G;
-    
-    // Posiziona il marker del minimo rispetto al target totale proteico
-    // Se il target è 150g e il minimo è 120g, il segno sarà all'80% della barra
-    let markerPos = Math.min((PT_MIN_G / TGT_P) * 100, 95);
-    document.getElementById('protMinMarker').style.left = markerPos + "%";
-} else {
-    protDashArea.style.display = 'none';
-}
-
+        localStorage.setItem('last_day_bmr', BMR);
     }
+
 
     // --- RENDER UI CORRETTO ---
     function render() {
@@ -1485,6 +1738,18 @@ if (highProtGoals.includes(state.goal)) {
 
     // --- FUNZIONI LOGICHE EXTRA ---
             function checkCircumference() {
+                // --- BLOCCO CONTROLLO PREMIUM ---
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    const outputBox = document.getElementById('circAnalysis');
+
+    if (!outputBox) return; 
+
+    if (!isPremium) {
+        outputBox.innerHTML = `<span style="color:#ff9500; font-weight:700; cursor:pointer;" onclick="window.open('https://www.pharmo.it', '_blank')">🔓 ANALISI MISURE RISERVATA PRO</span><br><small>Sblocca il confronto centimetri settimanale.</small>`;
+        return; // Ferma l'esecuzione qui per gli utenti base
+    }
+    // --------------------------------
+
         // 1. Recupera dati storici
         const oldAbd = parseFloat(localStorage.getItem('last_week_abd')) || 0;
         const oldCoscia = parseFloat(localStorage.getItem('last_week_coscia')) || 0;
@@ -1565,7 +1830,7 @@ if (highProtGoals.includes(state.goal)) {
         // -------------------------------------------------------
         // D. STAMPA A VIDEO NEL BOX
         // -------------------------------------------------------
-        const outputBox = document.getElementById('circAnalysis');
+   
         if (parts.length > 0) {
             outputBox.innerText = "Diff: " + parts.join(" | ") + " cm";
             outputBox.style.color = "#004494"; 
@@ -1589,6 +1854,12 @@ if (highProtGoals.includes(state.goal)) {
             dateDisplay.innerText = "-- / --";
             return; 
         }
+    // --- CONTROLLO PREMIUM AGGIUNTO ---
+    if (localStorage.getItem('app_premium_v1') !== 'true') {
+        dateDisplay.innerText = "🔒 PRO";
+        statusBox.innerHTML = "Sblocca la data stimata del traguardo con la versione PRO su pharmo.it";
+        return; 
+    }
 
         // 2. Calcolo Differenza Peso e Calorie
         let dailyDiff = 0;
@@ -1834,12 +2105,21 @@ function checkTimeAdvice(currentProtein) {
         }
     }
 }
-
+function getProtocolToast() {
+    const activeProt = localStorage.getItem('active_protocol_v1');
+    const day = new Date().getDay();
+    // Messaggi per il Metodo Shock
+    if (activeProt === 'shock') {
+        if (day >= 1 && day <= 5) return "🌊 Giorno Light: Carboidrati bassi per attivare la lipolisi.";
+        else return "🚀 Giorno Boost: Carboidrati alti per il metabolismo!";
+    }
+    return null;
+}
     // --- INIT ---
     // --- BLOCCO DI AVVIO UNIFICATO E CORRETTO ---
 window.addEventListener('DOMContentLoaded', () => {
     // 1. Controllo Disclaimer: apparirà SEMPRE se i dati sono puliti
-    if (localStorage.getItem('terms_accepted_v1') !== 'true') {
+    if (localStorage.getItem('terms_accepted_v1') !== 'true') {      
         const modal = document.getElementById('disclaimerModal');
         if (modal) modal.style.display = 'flex';
     }
@@ -1868,6 +2148,8 @@ window.addEventListener('DOMContentLoaded', () => {
     renderWater();
     const finalTotals = render(); 
     
+          
+
     // 4. Gestione Digiuno
     const fMode = document.getElementById('fastingMode');
     const fStart = document.getElementById('fastingStart');
@@ -1877,53 +2159,48 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // 5. Gestione Accesso
     handleAuth(); 
+checkPremiumStatus(); // <--- AGGIUNGI QUESTA RIGA: controlla se è premium ogni volta che apri l'app
+    // --- RIPRISTINO PROTOCOLLO SALVATO ---
+    const savedProt = localStorage.getItem('active_protocol_v1');
+    if (savedProt && savedProt !== 'none') {
+        const isPrem = localStorage.getItem('app_premium_v1') === 'true';
+        // Ripristina solo se è ancora Premium
+        if (isPrem) {
+            const sel = document.getElementById('advProtocol');
+            if(sel) {
+                sel.value = savedProt;
+                // Aggiorna subito il testo e i calcoli
+                updateProtocolDesc(); 
+            }
+        } else {
+            // Se il premium è scaduto, resetta a "none"
+            localStorage.setItem('active_protocol_v1', 'none');
+        }
+    }
 
-    // MODIFICA: Avvia i consigli solo se i termini sono già stati accettati in passato
+        // MODIFICA: Avvia i consigli solo se i termini sono già stati accettati in passato
     if (localStorage.getItem('terms_accepted_v1') === 'true') {
         const finalTotals = render();
         checkTimeAdvice(finalTotals.curP); 
-    }
-
-    // Segna l'app come pronta
-    appReady = true; 
-});
-
-function useBankCalories() {
-    let currentBank = parseFloat(localStorage.getItem('calorie_bank')) || 0;
-    
-    // Testo educativo e funzionale
-    let infoSalvadanaio = 
-        "💰 IL TUO SALVADANAIO CALORIE\n" +
-        "------------------------------------------------\n" +
-        "In questo spazio si accumulano le calorie che non hai consumato nei giorni scorsi.\n\n" +
-        "• COME FUNZIONA: Se finisci la giornata sotto il tuo target, l'avanzo viene salvato qui ogni mattina alle 04:00.\n" +
-        "• A COSA SERVE: Puoi usare questo 'tesoretto' per concederti uno sgarro o un pasto più abbondante oggi senza rovinare i progressi.\n" +
-        "• SCADENZA: Il salvadanaio si azzera ogni Lunedì mattina per iniziare una nuova settimana.\n" +
-        "------------------------------------------------\n\n" +
-        "Disponibili: " + Math.round(currentBank) + " kcal.\n" +
-        "Quante ne vuoi prelevare per oggi?";
-
-    if (currentBank <= 0) {
-        alert("Il tuo salvadanaio è vuoto.\n\nCompleta la giornata di oggi restando sotto il target per accumulare le prime calorie da usare domani!");
-        return;
-    }
-    
-    let use = prompt(infoSalvadanaio, "200");
-    
-    if (use !== null && use !== "") {
-        let amount = parseInt(use);
-        if (amount > 0 && amount <= currentBank) {
-            let extra = parseFloat(localStorage.getItem('extra_today')) || 0;
-            localStorage.setItem('extra_today', extra + amount);
-            localStorage.setItem('calorie_bank', currentBank - amount);
-            showToast(`✅ Budget aumentato di ${amount} kcal!`);
-            location.reload();
-        } else if (amount > currentBank) {
-            alert("Attenzione: non puoi prelevare più di quanto hai accumulato!");
-        }
+        // Mostra il toast del protocollo se l'utente è Premium
+const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+if (isPremium) {
+    const protocolMsg = getProtocolToast();
+    if (protocolMsg) {
+        // Lo mostriamo con un leggero ritardo per non sovrapporlo al primo toast
+        setTimeout(() => {
+            showToast(protocolMsg);
+        }, 4000); 
     }
 }
-    
+
+    }
+
+       
+// Segna l'app come pronta
+    appReady = true; 
+}); // <--- QUESTA CHIUDE TUTTO IL CARICAMENTO INIZIALE
+
 </script>
 </body>
 </html>
