@@ -869,38 +869,51 @@ function useBankCalories() {
         return;
     }
 
-    // --- LOGICA UTENTE PREMIUM (Istruzioni + Prelievo) ---
-    const spiegazionePremium = 
-        "💰 IL TUO SALVADANAIO CALORIE\n\n" +
-        "In questo spazio si accumulano le calorie che non hai consumato nei giorni scorsi.\n\n" +
-        "• COME FUNZIONA: Se finisci la giornata sotto il tuo target, l'avanzo viene salvato qui ogni mattina alle 04:00.\n\n" +
-        "• A COSA SERVE: Puoi usare questo 'tesoretto' per concederti uno sgarro o un pasto più abbondante oggi senza rovinare i progressi.\n\n" +
-        "• SCADENZA: Il salvadanaio si azzera ogni Lunedì mattina per iniziare una nuova settimana.\n\n" +
-        "----------------------------------\n" +
-        "ATTUALMENTE DISPONIBILI: " + currentBank + " kcal\n" +
-        "----------------------------------";
-
-    alert(spiegazionePremium);
-    
+    // --- LOGICA UTENTE PREMIUM ---
     if (currentBank <= 0) {
         alert("Il tuo salvadanaio è attualmente vuoto. Risparmia qualche caloria oggi per trovarla qui domani mattina!");
         return;
     }
 
-    let amountToUse = prompt(`Quante kcal vuoi prelevare dal tuo tesoretto di ${currentBank} kcal?`, "200");
+    // SPIEGAZIONE INIZIALE
+    alert(
+        "💰 IL TUO SALVADANAIO CALORIE\n\n" +
+        "Hai accumulato: " + currentBank + " kcal\n\n" +
+        "Puoi prelevarle ora per alzare il tuo target giornaliero (utile per pasti liberi o cene fuori)."
+    );
+
+    // INPUT UTENTE
+    let amountToUse = prompt(`Quante kcal vuoi prelevare dal totale di ${currentBank} kcal?`, "200");
+
+    // 1. CONTROLLO "ANNULLA" O VUOTO
+    // Se l'utente preme Annulla, amountToUse sarà null. Se non scrive nulla, sarà stringa vuota.
+    if (amountToUse === null || amountToUse.trim() === "") {
+        return; // Esce dalla funzione senza fare nulla
+    }
+
     let amount = parseInt(amountToUse);
 
-    if (amount > 0 && amount <= currentBank) {
+    // 2. VALIDAZIONE NUMERO
+    if (isNaN(amount) || amount <= 0) {
+        alert("Inserisci un numero valido.");
+        return;
+    }
+
+    if (amount > currentBank) {
+        alert("Errore: Non puoi prelevare più di quanto hai accumulato!");
+        return;
+    }
+
+    // 3. RICHIESTA DI CONFERMA FINALE (Sicurezza)
+    if (confirm(`Sei sicuro di voler aggiungere ${amount} kcal al tuo target di oggi?`)) {
         let extra = parseFloat(localStorage.getItem('extra_today')) || 0;
         localStorage.setItem('extra_today', extra + amount);
         localStorage.setItem('calorie_bank', currentBank - amount);
-        showToast(`👑 Bonus di ${amount} kcal aggiunto al target odierno!`);
+        
+        showToast(`👑 Bonus di ${amount} kcal aggiunto con successo!`);
         setTimeout(() => location.reload(), 1200);
-    } else if (amount > currentBank) {
-        alert("Errore: Non puoi prelevare più di quanto hai accumulato!");
     }
 }
-
 
 
 function checkCrononutrizione(calorie, carbo) {
