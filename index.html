@@ -201,26 +201,45 @@
 </head>
 <body>
 
-<div id="authGate">
-    <div class="auth-box" style="position: relative;">
-        <span id="closeAuthBtn" class="close-auth" onclick="document.getElementById('authGate').style.display='none'">&times;</span>
-        <div style="font-size: 3.5rem; margin-bottom: 10px;">🍎</div>
-        <h2 style="margin:0 0 10px 0; font-weight:800; color:#1c1c1e; font-size: 1.6rem;">Attiva Pharmocounter</h2>
-<p style="font-size:0.95rem; color:#636366; line-height:1.5; margin-bottom:25px;">
-    Unisciti alla community! Inviaci la tua <b>email</b> su WhatsApp per <b>sbloccare</b> l'app gratuitamente e iscriverti alla nostra newsletter.
-    <br><br>
-    <span style="color:#ff9500; font-weight:700;">🚀 VUOI LE FUNZIONI PRO?</span><br>
-    Effettua un ordine su <b>pharmo.it</b>: riceverai nel pacco il codice per sbloccare il <b>Digiuno Intermittente</b>, il <b>Salvadanaio</b>, il <b>Protocollo Pro</b>, la <b>Data Obiettivo</b>, l'<b>Analisi Misure</b> e i <b>Report PRO</b>!
-</p>
-        <a href="https://wa.me/393501407554?text=%F0%9F%8D%8E%20%2AATTIVAZIONE%20PHARMOCOUNTER%2A%20%F0%9F%8D%8E%0A%0ACiao%20Team%20Pharmo%21%20%F0%9F%91%8B%20Vorrei%20ricevere%20il%20codice%20di%20sblocco%20gratuito%2E%0A%0A%F0%9F%93%A7%20%2ALa%20mia%20mail%20%C3%A8%3A%2A%20%0A%0A%E2%9C%85%20Fornendo%20questo%20indirizzo%2C%20accetto%20di%20iscrivermi%20alla%20newsletter%20di%20%2Apharmo%2Eit%2A%20per%20ricevere%20consigli%20e%20promozioni%2E" 
-           target="_blank" class="btn-wa">
-           <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Richiedi Codice Gratuito
-        </a>
-        <input type="text" id="unlockCodeInput" placeholder="Inserisci Codice Mensile" style="width:100%; height:50px; border-radius:12px; border:1px solid #ccc; margin-bottom:10px; text-align:center; font-size:1.1rem; font-weight:800;">
-        <button class="btn-unlock" onclick="verifyUnlockCode()">Sblocca Ora</button>
-    </div>
-</div>
+<div id="authGate" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box;">
+    <div class="auth-box" style="position: relative; background: white; width: 100%; max-width: 380px; max-height: 85vh; border-radius: 25px; padding: 25px; overflow-y: auto; box-sizing: border-box; text-align: center; -webkit-overflow-scrolling: touch; box-shadow: 0 15px 40px rgba(0,0,0,0.4);">
+        
+        <span id="closeAuthBtn" class="close-auth" onclick="document.getElementById('authGate').style.display='none'" 
+              style="position: sticky; top: 0; float: right; z-index: 100; background: #f0f0f0; color: #333; border-radius: 50%; width: 30px; height: 30px; text-align: center; line-height: 28px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: -30px; display: block;">&times;</span>
 
+        <div style="text-align: center; margin-top: 10px;">
+            <div style="font-size: 3.5rem; margin-bottom: 10px;">🍎</div>
+            <h2 style="margin:0 0 10px 0; font-weight:800; color:#1c1c1e; font-size: 1.6rem;">Attiva Pharmocounter</h2>
+            <p style="font-size:0.95rem; color:#636366; line-height:1.5; margin-bottom:25px;">
+                Unisciti alla community! Inviaci la tua <b>email</b> su WhatsApp per <b>sbloccare</b> l'app gratuitamente e iscriverti alla nostra newsletter.
+                <br><br>
+                <span style="color:#ff9500; font-weight:700;">🚀 VUOI LE FUNZIONI PRO?</span><br>
+                Effettua un ordine su <b>pharmo.it</b>: riceverai nel pacco il codice per sbloccare il <b>Digiuno Intermittente</b>, il <b>Salvadanaio</b>, il <b>Protocollo Pro</b>, la <b>Data Obiettivo</b>, l'<b>Analisi Misure</b> e i <b>Report PRO</b>!
+            </p>
+            <a href="https://wa.me/393501407554?text=%F0%9F%8D%8E%20%2AATTIVAZIONE%20PHARMOCOUNTER%2A%20%F0%9F%8D%8E%0A%0ACiao%20Team%20Pharmo%21%20%F0%9F%91%8B%20Vorrei%20ricevere%20il%20codice%20di%20sblocco%20gratuito%2E%0A%0A%F0%9F%93%A7%20%2ALa%20mia%20mail%20%C3%A8%3A%2A%20%0A%0A%E2%9C%85%20Fornendo%20questo%20indirizzo%2C%20accetto%20di%20iscrivermi%20alla%20newsletter%20di%20%2Apharmo%2Eit%2A%20per%20ricevere%20consigli%20e%20promozioni%2E" 
+               target="_blank" class="btn-wa">
+               <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Richiedi Codice Gratuito
+            </a>
+            <input type="text" id="unlockCodeInput" placeholder="Inserisci Codice Mensile" style="width:100%; height:50px; border-radius:12px; border:1px solid #ccc; margin-bottom:10px; text-align:center; font-size:1.1rem; font-weight:800;">
+            <button class="btn-unlock" onclick="verifyUnlockCode()">Sblocca Ora</button>
+            <div class="vip-promo-box" style="background: #fff; padding: 18px; border-radius: 20px; border: 2px solid #ff3b30; margin-top: 15px; box-shadow: 0 4px 15px rgba(255,59,48,0.15); text-align: left;">
+                <h3 style="color: #ff3b30; margin-top: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+                    <span>💎</span> STATUS PLATINUM (VIP)
+                </h3>
+                <p style="font-size: 0.85rem; color: #444; line-height: 1.5; margin-bottom: 12px;">
+                    Riservato ai clienti con piano di integrazione attivo su <b>pharmo.it</b>. 
+                    Sblocca il controllo totale per trasformare il tuo corpo in una macchina brucia-grassi:<br><br>
+                    💎 <b>SOS SGARRO:</b> Il "tasto reset" per attivare il <b>reset insulinico</b> post-pasto libero, svuotare il glicogeno ed <b>evitare l'accumulo di nuovo grasso</b>.<br><br>
+                    💎 <b>INTENSITÀ PRO:</b> Gestione dinamica <b>Hard/Soft</b> per decidere quanto "spingere" il metabolismo in base ai tuoi obiettivi settimanali.<br><br>
+                    💎 <b>FULL PASS:</b> Accesso immediato a Digiuno, Salvadanaio, Protocolli Shock e Report misure.
+                </p>
+                <div style="text-align: center; border-top: 1px dashed #ff3b30; padding-top: 12px; margin-top: 5px;">
+                    <a href="https://www.pharmo.it" target="_blank" style="color: #ff3b30; font-weight: 800; font-size: 0.8rem; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;">
+                        🛒 Ottieni il tuo Codice VIP allo Store →
+                    </a>
+                </div>
+            </div>
+        </div> </div> </div>
 
 <div id="smartToast" class="smart-toast"><span class="toast-icon">💡</span><span id="toastMsg">...</span><a href="https://www.pharmo.it" target="_blank" class="toast-btn">Vedi</a></div>
 
@@ -985,28 +1004,40 @@ function handleAuth() {
 
 function verifyUnlockCode() {
     const entered = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
-    if (entered === CHIAVE_PRO || entered === CHIAVE_BASIC) {
+    
+    // Definiamo i codici corretti
+    const CHIAVE_BASIC = "PHARMOWIN26"; 
+    const CHIAVE_GOLD = "GOLDPHARMO";   
+    const CHIAVE_VIP = "PLATINUM26";
+
+    // Controlliamo se il codice è uno di quelli validi
+    if (entered === CHIAVE_GOLD || entered === CHIAVE_BASIC || entered === CHIAVE_VIP) {
         localStorage.setItem('app_unlocked_v1', 'true');
-        
-        // Se inserisce GOLDPHARMO, sblocca le funzioni Premium
-        if(entered === CHIAVE_PRO) {
-            localStorage.setItem('app_premium_v1', 'true');
-            checkPremiumStatus(); // <--- 1. AGGIUNTO QUI: Toglie l'overlay subito
-        }
-        
         localStorage.setItem('last_unlock_timestamp', Date.now());
         localStorage.removeItem('first_visit_ever');
         
+        // Se è Gold o VIP, sblocca funzioni Premium
+        if(entered === CHIAVE_GOLD || entered === CHIAVE_VIP) {
+            localStorage.setItem('app_premium_v1', 'true');
+            checkPremiumStatus(); 
+        }
+        
+        // Se è VIP, sblocca lo Status Platinum (per togliere il lucchetto al tasto SOS)
+        if(entered === CHIAVE_VIP) {
+            localStorage.setItem('app_vip_v1', 'true');
+            localStorage.setItem('intensity_v1', 'standard');
+        }
+
         document.getElementById('authGate').style.display = 'none';
         showToast("✅ Accesso attivato!");
         
-        // 2. IMPORTANTE: Ricarica la pagina per attivare le nuove calorie e i protocolli
+        // Ricarica per applicare i cambiamenti
         setTimeout(() => location.reload(), 1000); 
     } else {
         alert("Chiave errata. Richiedila su WhatsApp!");
     }
 }
-
+   
 
 
 // --- NUOVE LOGICHE: SALVADANAIO E CRONONUTRIZIONE ---
