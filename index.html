@@ -2334,6 +2334,12 @@ function getProtocolToast() {
     // --- INIT ---
     // --- BLOCCO DI AVVIO UNIFICATO E CORRETTO ---
 window.addEventListener('DOMContentLoaded', () => {
+// --- AGGIORNAMENTO VISIVO DELLA SERIE ---
+const actualStreak = localStorage.getItem('streak_days') || 1;
+const badge = document.getElementById('streakDisplay');
+if (badge) {
+    badge.innerText = "🔥 " + actualStreak + "/7";
+}
     // 1. Controllo Disclaimer: apparirà SEMPRE se i dati sono puliti
     if (localStorage.getItem('terms_accepted_v1') !== 'true') {      
         const modal = document.getElementById('disclaimerModal');
