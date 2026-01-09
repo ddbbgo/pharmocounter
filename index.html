@@ -173,33 +173,24 @@
 
         /* MODALS & TOAST */
         /* Stile unico per tutti i popup */
+/* Correzione per banner troppo alti */
 .modal-overlay, #recoveryModal { 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.85); 
-    z-index: 99999; 
-    display: none; /* Inizialmente nascosto */
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px; 
-    box-sizing: border-box; 
-    backdrop-filter: blur(5px); 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.85); z-index: 99999; 
+    display: none; justify-content: center; align-items: center; 
+    padding: 10px; box-sizing: border-box; backdrop-filter: blur(5px); 
 }
 
-/* Il contenitore bianco interno */
 .modal-box { 
-    background: white; 
-    width: 100%; 
-    max-width: 350px; 
-    border-radius: 20px; 
-    padding: 25px; 
-    text-align: center; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-    max-height: 90vh; 
+    background: white; width: 100%; max-width: 350px; border-radius: 20px; 
+    padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+    /* Queste due righe permettono lo scroll interno se il testo è troppo lungo */
+    max-height: 85vh; 
     overflow-y: auto; 
     position: relative;
+    -webkit-overflow-scrolling: touch; /* Rende lo scroll fluido su iPhone */
 }
+
 
         .modal-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 15px; color: #1c1c1e; }
         .modal-text { font-size: 0.9rem; color: #444; line-height: 1.5; text-align: left; margin-bottom: 20px; }
@@ -345,7 +336,7 @@
 </div>
 
         <div id="recoveryModal" class="modal-overlay">
-    <div class="modal-box" style="border: 2px solid #007aff;">
+    <div class="modal-box" style="border: 2px solid #FFD700; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <h2 style="color:#007aff; margin-top:0; font-weight:800;">💎 RECOVERY PLATINUM</h2>
         <p style="font-size:0.85rem; color:#666; font-style:italic; margin-bottom:20px;">Protocollo di Reset Metabolico</p>
 
