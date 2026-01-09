@@ -724,8 +724,14 @@ function confirmRecovery() {
     const isVip = localStorage.getItem('app_vip_v1') === 'true';
     const streak = parseInt(localStorage.getItem('streak_days')) || 0;
 
-    if (!isVip || streak < 7) {
-        alert("Sblocca lo Status Platinum per attivare il protocollo.");
+    // Controllo specifico per l'utente
+    if (!isVip) {
+        alert("💎 Il Recovery è riservato ai clienti VIP.\nSbloccalo con il codice che ottieni con gli acquisti ricorrenti su pharmo.it");
+        return;
+    }
+
+    if (streak < 7) {
+        alert("🔒 REQUISITO SERIE NON RAGGIUNTO\n\nIl protocollo Boost-Recovery richiede una costanza di almeno 7 giorni (Serie 7+) per garantire l'efficacia del reset ormonale.\n\nAttuale: " + streak + " giorni.");
         return;
     }
     const oggi = Date.now();
