@@ -336,8 +336,9 @@
 </div>
 
         <div id="recoveryModal" class="modal-overlay">
-    <div class="modal-box" style="border: 2px solid #FFD700; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <div class="modal-box" style="border: 2px solid #FFD700; max-height: 80vh; overflow-y: auto; display: flex; flex-direction: column;">
         <h2 style="color:#007aff; margin-top:0; font-weight:800;">💎 RECOVERY PLATINUM</h2>
+        <p style="text-align:center; font-weight:700; color:#b8860b; margin-bottom:10px;">📉 Ti senti stanco, senza forze o in stallo con il peso?</p>
         <p style="font-size:0.85rem; color:#666; font-style:italic; margin-bottom:20px;">Protocollo di Reset Metabolico</p>
 
         <div style="text-align:left; font-size:0.9rem; line-height:1.5; color:#333;">
@@ -684,12 +685,18 @@
 <script>
 // Apre il modal con i controlli Platinum
 function openRecoveryModal() {
+    const isVip = localStorage.getItem('app_vip_v1') === 'true';
+    if (!isVip) {
+        alert("💎 FUNZIONE PLATINUM\n\nIl Recovery è riservato ai clienti VIP. Sbloccalo con il codice che trovi nel tuo pacco Pharmo!");
+        return;
+    }
+
     const streak = parseInt(localStorage.getItem('streak_days')) || 0;
     const ultimoRecovery = parseInt(localStorage.getItem('last_recovery_timestamp')) || 0;
     const giorniPassati = (Date.now() - ultimoRecovery) / (1000 * 60 * 60 * 24);
 
     if (streak < 7) {
-        alert("🔒 Lo Status Platinum (Serie 7+) è richiesto per il Recovery.");
+        alert("🔒 Serie di 7 giorni richiesta per attivare il Recovery.");
         return;
     }
     
@@ -1883,6 +1890,26 @@ if (isBioActive) {
             'maintain': 1.0, 'gain': 1.10 
         };
         TGT_CAL = Math.round(TDEE * adj[state.goal]);
+// --- LOGICA RECOVERY PLATINUM ---
+const isRecoveryActive = localStorage.getItem('recovery_active_today') === 'true';
+
+if (isRecoveryActive) {
+    // Portiamo le calorie al Mantenimento (TDEE) per il reset ormonale
+    TGT_CAL = TDEE; 
+
+    // Alziamo i Carboidrati al 55% (Reset Metabolico)
+    TGT_C = Math.round((TGT_CAL * 0.55) / 4);
+    
+    // Proteine al 25% e Grassi al 20%
+    TGT_P = Math.round((TGT_CAL * 0.25) / 4);
+    TGT_F = Math.round((TGT_CAL * 0.20) / 9);
+    
+    // Cambia il testo nel diario per avvisare l'utente
+    const statusText = document.getElementById('statusText');
+    if (statusText) {
+        statusText.innerHTML = "💎 <b style='color:#b8860b'>RECOVERY ATTIVO:</b> Mangia a sazietà per resettare il metabolismo!";
+    }
+}
 
         // 6. CALCOLO MACRO BASE (Ora c_r, p_r esistono!)
         let baseC = Math.round((TGT_CAL * c_r) / 4);
