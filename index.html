@@ -2543,122 +2543,87 @@ function getProtocolToast() {
     return null;
 }
     // --- INIT ---
-    // --- BLOCCO DI AVVIO UNIFICATO E CORRETTO ---
+    // --- BLOCCO DI AVVIO UNIFICATO E CORRETTO PER SALVATAGGIO DATI ---
 window.addEventListener('DOMContentLoaded', () => {
-calc(); 
-// --- AGGIORNAMENTO VISIVO DELLA SERIE ---
-// --- LOGICA BADGE SERIE (STREAK) ---
-const actualStreak = parseInt(localStorage.getItem('streak_days')) || 1;
-const badge = document.getElementById('streakDisplay');
-
-if (badge) {
-    let target = 7;
-    // Rimuoviamo le classi precedenti per resettare lo stile
-    badge.classList.remove('streak-platinum', 'streak-gold'); 
-
-    // 1. Determina il target attuale
-    if (actualStreak > 14) {
-        target = 30;
-    } else if (actualStreak > 7) {
-        target = 14;
-    } else {
-        target = 7;
+    
+    // 1. Recupero immediato del profilo dal database locale
+    const savedProfile = localStorage.getItem('profile_v3');
+    if (savedProfile) {
+        state = JSON.parse(savedProfile);
     }
 
-    // 2. Attiva il PLATINUM SOLO nei traguardi (7, 14, 30+)
-    if (actualStreak === 7 || actualStreak === 14 || actualStreak >= 30) {
-        badge.classList.add('streak-gold');     // Questo dà la base ORO
-        badge.classList.add('streak-platinum'); // Questo dà la brillantezza PLATINUM
-    }
-
-    badge.innerText = "🔥 " + actualStreak + "/" + target;
-}
-
-// --- CONTROLLO DISCLAIMER ---
-// Apparirà SEMPRE se i dati sono puliti o è la prima volta
-if (localStorage.getItem('terms_accepted_v1') !== 'true') {      
-    const modal = document.getElementById('disclaimerModal');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
-}
-
-    // 2. Caricamento dati profilo negli input (con controllo di sicurezza)
+    // 2. SCRIVI I DATI NEGLI INPUT (Prima di calcolare!)
     const setVal = (id, val) => {
         const el = document.getElementById(id);
-        if (el) el.value = val;
+        if (el && val !== undefined && val !== null) el.value = val;
     };
 
-    setVal('gender', state.g);
-    setVal('age', state.age);
-    setVal('weight', state.w);
-    setVal('height', state.h);
-    setVal('act', state.act);
-    setVal('goal', state.goal);
-    setVal('targetWeightInput', state.targetW || '');
-    setVal('targetDateInput', state.targetD || '');
-    setVal('circ_abd', state.circ_abd || '');
-    setVal('circ_coscia', state.circ_coscia || '');
-    setVal('circ_braccio', state.circ_braccio || '');
+    if (state) {
+        setVal('gender', state.g);
+        setVal('age', state.age);
+        setVal('weight', state.w);
+        setVal('height', state.h);
+        setVal('act', state.act);
+        setVal('goal', state.goal);
+        setVal('targetWeightInput', state.targetW || '');
+        setVal('targetDateInput', state.targetD || '');
+        setVal('circ_abd', state.circ_abd || '');
+        setVal('circ_coscia', state.circ_coscia || '');
+        setVal('circ_braccio', state.circ_braccio || '');
+    }
 
-    // 3. Esecuzione calcoli e grafica
-    renderFavSelect();
+    // 3. ESEGUI I CALCOLI (Ora che i campi sono pieni)
     calc(); 
+    renderFavSelect();
     renderWater();
     const finalTotals = render(); 
-    
-          
 
-    // 4. Gestione Digiuno
+    // 4. Gestione Badge Serie (Streak)
+    const actualStreak = parseInt(localStorage.getItem('streak_days')) || 1;
+    const badge = document.getElementById('streakDisplay');
+    if (badge) {
+        let target = (actualStreak > 14) ? 30 : (actualStreak > 7 ? 14 : 7);
+        badge.classList.remove('streak-platinum', 'streak-gold'); 
+        if (actualStreak === 7 || actualStreak === 14 || actualStreak >= 30) {
+            badge.classList.add('streak-gold', 'streak-platinum');
+        }
+        badge.innerText = "🔥 " + actualStreak + "/" + target;
+    }
+
+    // 5. Gestione Accesso & Premium
+    handleAuth(); 
+    checkPremiumStatus();
+
+    // 6. Ripristino Protocollo
+    const savedProt = localStorage.getItem('active_protocol_v1');
+    if (savedProt && savedProt !== 'none' && localStorage.getItem('app_premium_v1') === 'true') {
+        const sel = document.getElementById('advProtocol');
+        if(sel) {
+            sel.value = savedProt;
+            updateProtocolDesc(); 
+        }
+    }
+
+    // 7. Disclaimer & Consigli Tempo
+    if (localStorage.getItem('terms_accepted_v1') !== 'true') {      
+        if (document.getElementById('disclaimerModal')) document.getElementById('disclaimerModal').style.display = 'flex';
+    } else {
+        checkTimeAdvice(finalTotals.curP); 
+        if (localStorage.getItem('app_premium_v1') === 'true') {
+            const protocolMsg = getProtocolToast();
+            if (protocolMsg) setTimeout(() => showToast(protocolMsg), 4000); 
+        }
+    }
+
+    // 8. Gestione Digiuno
     const fMode = document.getElementById('fastingMode');
     const fStart = document.getElementById('fastingStart');
     if (fMode) fMode.value = localStorage.getItem('fasting_mode') || 'none';
     if (fStart) fStart.value = localStorage.getItem('fasting_start') || '13:00';
     updateFastingUI();
 
-        // 5. Gestione Accesso
-    handleAuth(); 
-checkPremiumStatus(); // <--- AGGIUNGI QUESTA RIGA: controlla se è premium ogni volta che apri l'app
-    // --- RIPRISTINO PROTOCOLLO SALVATO ---
-    const savedProt = localStorage.getItem('active_protocol_v1');
-    if (savedProt && savedProt !== 'none') {
-        const isPrem = localStorage.getItem('app_premium_v1') === 'true';
-        // Ripristina solo se è ancora Premium
-        if (isPrem) {
-            const sel = document.getElementById('advProtocol');
-            if(sel) {
-                sel.value = savedProt;
-                // Aggiorna subito il testo e i calcoli
-                updateProtocolDesc(); 
-            }
-        } else {
-            // Se il premium è scaduto, resetta a "none"
-            localStorage.setItem('active_protocol_v1', 'none');
-        }
-    }
-
-        // MODIFICA: Avvia i consigli solo se i termini sono già stati accettati in passato
-    if (localStorage.getItem('terms_accepted_v1') === 'true') {
-        const finalTotals = render();
-        checkTimeAdvice(finalTotals.curP); 
-        // Mostra il toast del protocollo se l'utente è Premium
-const isPremium = localStorage.getItem('app_premium_v1') === 'true';
-if (isPremium) {
-    const protocolMsg = getProtocolToast();
-    if (protocolMsg) {
-        // Lo mostriamo con un leggero ritardo per non sovrapporlo al primo toast
-        setTimeout(() => {
-            showToast(protocolMsg);
-        }, 4000); 
-    }
-}
-
-    }
-
-       
-// Segna l'app come pronta
     appReady = true; 
-}); // <--- QUESTA CHIUDE TUTTO IL CARICAMENTO INIZIALE
+});
 
 </script>
 </body>
