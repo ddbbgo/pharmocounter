@@ -1835,34 +1835,28 @@ localStorage.setItem('extra_today', 0);
     if (recoveryLock) {
         const isVip = localStorage.getItem('app_vip_v1') === 'true';
         const streak = parseInt(localStorage.getItem('streak_days')) || 0;
-        
-        // Se ha entrambi i requisiti vede il Diamante, ALTRIMENTI (per tutti gli altri) vede il Lucchetto
         if (isVip && streak >= 7) {
             recoveryLock.innerText = "💎";
         } else {
             recoveryLock.innerText = "🔒";
         }
     }
-    // ... resto del codice
 
-    // ... (prosegui con state.g, state.age, ecc.)
-    
-    // 1. RECUPERO DATI (Input Utente)
-        // 1. RECUPERO DATI (con valori di sicurezza per evitare il blocco)
+    // --- 1. RECUPERO DATI (Filtro Anti-Blocco) ---
     state.g = document.getElementById('gender').value;
     state.age = parseFloat(document.getElementById('age').value) || 30;
     state.w = parseFloat(document.getElementById('weight').value) || 0;
     state.h = parseFloat(document.getElementById('height').value) || 0;
-    state.act = parseFloat(document.getElementById('act').value) || 1.2;
+    state.act = parseFloat(document.getElementById('act').value) || 1.375;
     state.goal = document.getElementById('goal').value;
 
-    // Se peso o altezza sono 0, non procedere col calcolo matematico per evitare errori
+    // Se i dati sono a zero, mostra l'avviso e ferma lo script per non crashare
     if (state.w === 0 || state.h === 0) {
-        document.getElementById('scientificData').innerHTML = "Inserisci Peso e Altezza nel profilo per calcolare i dati.";
+        document.getElementById('scientificData').innerHTML = "⚠️ Inserisci <b>Peso</b> e <b>Altezza</b> per vedere i calcoli.";
         return; 
     }
 
-    // --- FIX NOMI DINAMICI (Shock vs Carb Cycling) ---
+    // Gestione Nomi Dinamici Protocollo
     const shockOpt = document.querySelector('#advProtocol option[value="shock"]');
     if (shockOpt) {
         if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(state.goal)) {
@@ -1880,7 +1874,7 @@ localStorage.setItem('extra_today', 0);
     
     localStorage.setItem('profile_v3', JSON.stringify(state));
 
-    // 2. SUGGERITORE PESO (Grafica)
+    // --- 2. SUGGERITORE PESO (ESTETICA) ---
     const suggestionBox = document.getElementById('idealWeightSuggestion');
     if (suggestionBox) {
         suggestionBox.style.display = 'block';
@@ -1899,35 +1893,31 @@ localStorage.setItem('extra_today', 0);
         }
     }
 
-    // 3. CALCOLO METABOLISMO (BMR & TDEE)
+    // --- 3. CALCOLO BMR & TDEE ---
     let s = (10 * state.w) + (6.25 * state.h) - (5 * state.age);
     BMR = (state.g === 'm') ? s + 5 : s - 161;
     TDEE = Math.round(BMR * state.act);
 
-    // --- DEFINIZIONE VARIABILI ---
+    // --- 4. OBIETTIVI (TESTI E SIMBOLI ORIGINALI) ---
     let p_r, c_r, f_r, gTxt, sTit, sDes;
     let reqHighProt = false;
 
-    // 4. DEFINIZIONE OBIETTIVI (TESTI E SIMBOLI ORIGINALI)
     if (state.goal.startsWith('lose')) {
         sTit = "Protocollo Total Body 3-Fasi"; sDes = stackLoss;
-        if (state.goal === 'lose_aggr') { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="Perdita Peso Standard (-20%)"; reqHighProt=false; }
-        else if (state.goal === 'lose_athlete_15') { c_r=0.35; p_r=0.35; f_r=0.3; gTxt="Atleta Cut Aggressivo (-15%)"; reqHighProt=true; }
-        else { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="Atleta Cut Conservativo (-10%)"; reqHighProt=true; }
+        if (state.goal === 'lose_aggr') { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="📉 Perdita Peso Standard (-20%)"; }
+        else if (state.goal === 'lose_athlete_15') { c_r=0.35; p_r=0.35; f_r=0.3; gTxt="✂️ Atleta / Cut Aggressivo (-15%)"; reqHighProt=true; }
+        else { c_r=0.4; p_r=0.3; f_r=0.3; gTxt="🛡️ Atleta / Cut Conservativo (-10%)"; reqHighProt=true; }
     } else if (state.goal === 'recomp') {
-        c_r=0.35; p_r=0.35; f_r=0.3; gTxt="Ricomposizione Corporea"; sTit="Protocollo Recomp"; sDes=stackRecomp; reqHighProt=true;
+        c_r=0.35; p_r=0.35; f_r=0.3; gTxt="💪 Ricomposizione Corporea"; sTit="Protocollo Recomp"; sDes=stackRecomp; reqHighProt=true;
     } else {
         c_r=0.5; p_r=0.2; f_r=0.3; 
-        if(state.goal==='detox') { gTxt="Detox (-5%)"; sTit="Protocollo Detox"; sDes=stackDetox; }
-        else if(state.goal==='beauty') { gTxt="Beauty (Mantenimento)"; sTit="Protocollo Glow"; sDes=stackBeauty; c_r=0.45; p_r=0.25; }
-        else if(state.goal==='gain') { 
-            gTxt="Surplus (+10%)"; sTit="Protocollo Struttura"; sDes=stackGain; 
-            c_r=0.45; p_r=0.30; reqHighProt = true; 
-        }
-        else { gTxt="Mantenimento"; sTit="Protocollo Definizione"; sDes=stackGain; }
+        if(state.goal==='detox') { gTxt="💧 Detox & Sgonfiamento (-5%)"; sTit="Protocollo Detox"; sDes=stackDetox; }
+        else if(state.goal==='beauty') { gTxt="✨ Beauty & Anti-Age (Mantenimento)"; sTit="Protocollo Glow"; sDes=stackBeauty; c_r=0.45; p_r=0.25; }
+        else if(state.goal==='gain') { gTxt="📈 Aumento Muscolare (+10%)"; sTit="Protocollo Struttura"; sDes=stackGain; c_r=0.45; p_r=0.30; reqHighProt = true; }
+        else { gTxt="⚖️ Mantenimento"; sTit="Protocollo Definizione"; sDes=stackGain; }
     }
 
-        // --- 5. LOGICA RECOVERY PLATINUM ---
+    // --- 5. LOGICA PROTOCOLLI SPECIALI ---
     const isRecoveryActive = localStorage.getItem('recovery_active_today') === 'true';
 
     if (isRecoveryActive) {
@@ -1935,35 +1925,31 @@ localStorage.setItem('extra_today', 0);
         TGT_C = Math.round((TGT_CAL * 0.55) / 4); 
         TGT_P = Math.round((TGT_CAL * 0.25) / 4); 
         TGT_F = Math.round((TGT_CAL * 0.20) / 9);
-        
         const stText = document.getElementById('statusText');
         if (stText) stText.innerHTML = "💎 <b style='color:#b8860b'>BOOST-RECOVERY ATTIVO:</b> Reset ormonale in corso!";
     } else { 
-        // Qui dentro ci deve essere tutto il resto dei calcoli (adj, goal, ecc.)
-
-        // 5. CALCOLO CALORIE BASE
         let adj = { 
             'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 
             'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 
             'maintain': 1.0, 'gain': 1.10 
         };
-        TGT_CAL = Math.round(TDEE * adj[state.goal]);
+        TGT_CAL = Math.round(TDEE * (adj[state.goal] || 1.0));
 
-        let baseC = Math.round((TGT_CAL * c_r) / 4);
-        let baseP = Math.round((TGT_CAL * p_r) / 4);
-        let baseF = Math.round((TGT_CAL * f_r) / 9);
+        let baseC = (TGT_CAL * c_r) / 4;
+        let baseP = (TGT_CAL * p_r) / 4;
+        let baseF = (TGT_CAL * f_r) / 9;
 
         const finalMacros = applyProtocolLogic(baseC, baseP, baseF);
-        TGT_C = finalMacros.c; TGT_P = finalMacros.p; TGT_F = finalMacros.f;
-
-        const finalSOS = applySOSLogic(TGT_C, TGT_P, TGT_F);
-        TGT_C = finalSOS.c; TGT_P = finalSOS.p; TGT_F = finalSOS.f;
-
+        const finalSOS = applySOSLogic(finalMacros.c, finalMacros.p, finalMacros.f);
+        
+        TGT_C = Math.round(finalSOS.c);
+        TGT_P = Math.round(finalSOS.p);
+        TGT_F = Math.round(finalSOS.f);
         TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9);
     }
 
-    // --- 6. AGGIORNAMENTO UI E CALCOLI COMUNI ---
-    PT_MIN_G = reqHighProt ? Math.round(state.w * PT_MIN_MULTIPLIER) : 0;
+    // --- 6. CORREZIONE PROTEINE & SALVADANAIO ---
+    PT_MIN_G = reqHighProt ? Math.round(state.w * 1.8) : 0;
     localStorage.setItem('pt_min_g', PT_MIN_G);
     
     if (reqHighProt && TGT_P < PT_MIN_G) {
@@ -1976,12 +1962,12 @@ localStorage.setItem('extra_today', 0);
     if (TGT_CAL < BMR) TGT_CAL = Math.round(BMR);
     TGT_MIN_KCAL = Math.max(Math.round(TDEE * 0.80), BMR);
 
-    // 11. AGGIORNA VISUALIZZAZIONE (UI)
+    // --- 7. AGGIORNAMENTO UI ---
+    document.getElementById('scientificData').innerHTML = `Metabolismo Basale (BMR): <b>${Math.round(BMR)}</b> kcal<br>Fabbisogno Totale (TDEE): <b>${TDEE}</b> kcal<br>Piano: <b>${gTxt}</b>`;
+
     if (!isRecoveryActive) {
         document.getElementById('shopTitle').innerText = sTit; 
         document.getElementById('shopDesc').innerHTML = sDes;
-        document.getElementById('scientificData').innerHTML = `Metabolismo Basale (BMR): <b>${Math.round(BMR)}</b> kcal<br>Fabbisogno Totale (TDEE): <b>${TDEE}</b> kcal<br>Piano: <b>${gTxt}</b>`;
-
     }
     
     document.getElementById('targetDisplay').innerText = Math.round(TGT_CAL);
@@ -1989,9 +1975,6 @@ localStorage.setItem('extra_today', 0);
     let bmrPct = (TGT_CAL > 0) ? Math.min((BMR / TGT_CAL) * 100, 95) : 0;
     document.getElementById('bmrMarker').style.left = bmrPct + "%";
     document.getElementById('bmrTag').style.left = bmrPct + "%";
-
-    const armWrap = document.getElementById('braccio_input_wrapper');
-    if(armWrap) armWrap.style.display = ['gain', 'recomp', 'lose_athlete_15', 'lose_cons'].includes(state.goal) ? 'block' : 'none';
 
     const protDashArea = document.getElementById('proteinDashboardArea');
     if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(state.goal)) {
@@ -2006,10 +1989,10 @@ localStorage.setItem('extra_today', 0);
     updatePredictionStatus();
     checkCircumference();
     render();
+
     localStorage.setItem('last_day_target', TGT_CAL);
     localStorage.setItem('last_day_bmr', BMR);
 }
-
 
     // --- RENDER UI CORRETTO ---
     function render() {
