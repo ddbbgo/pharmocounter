@@ -1237,6 +1237,8 @@ function checkCrononutrizione(calorie, carbo) {
     const todayStr = now.toDateString();
     
         if (localStorage.getItem('app_date') !== todayStr) {
+        // AGGIUNGI QUESTA RIGA DENTRO IL RESET GIORNALIERO
+localStorage.setItem('extra_today', 0); 
         let lastTarget = parseFloat(localStorage.getItem('last_day_target')) || 0;
         let lastConsumed = parseFloat(localStorage.getItem('last_day_total_consumed')) || 0;
         let lastBMR = parseFloat(localStorage.getItem('last_day_bmr')) || 0; 
@@ -2418,5 +2420,3 @@ if (isPremium) {
 </script>
 </body>
 </html>
-
-
