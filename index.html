@@ -6,6 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pharmocounter</title>
     <style>
+    .btn-recovery-active {
+    background: linear-gradient(135deg, #00d4ff 0%, #0077ff 50%, #00d4ff 100%) !important;
+    background-size: 200% auto !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3); /* Ombra più sottile */
+    transition: 0.3s;
+    animation: pulseBlue 2s infinite, shine 3s infinite linear;
+    
+    /* MODIFICHE PER DISCREZIONE */
+    border: none;
+    border-radius: 20px;       /* Più arrotondato, stile pillola */
+    padding: 4px 12px;         /* Molto più basso */
+    font-size: 0.65rem;        /* Testo piccolo come il salvadanaio */
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+@keyframes pulseBlue {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
     /* LIVELLO 1 & 2 (7 e 14 giorni): ORO CLASSICO */
 .streak-gold {
     background: linear-gradient(135deg, #FFD700, #FFA500) !important;
@@ -285,6 +316,43 @@
         <button class="modal-btn" onclick="acceptTerms()">Ho Letto, Compreso e Accetto</button>
     </div>
 </div>
+<div id="recoveryModal" class="modal" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.8); z-index:9999;">
+    <div class="modal-content" style="max-width:500px; width:90%; border:2px solid #FFD700; background:#fff; border-radius:20px; padding:25px; box-shadow:0 0 30px rgba(255,215,0,0.3); max-height:90vh; overflow-y:auto;">
+        
+        <h2 style="color:#b8860b; text-align:center; margin-top:0; font-family:sans-serif; letter-spacing:1px;">💎 BIO-RECOVERY PLATINUM</h2>
+        <p style="text-align:center; font-style:italic; color:#666; margin-bottom:20px;">Protocollo di Modulazione Ormonale</p>
+
+        <div style="font-family:sans-serif; line-height:1.5; color:#333;">
+            <p><strong>Ascolta il tuo corpo: senti un calo di potenza?</strong></p>
+            <p style="font-size:0.95em;">Se la stanchezza si fa sentire, potrebbe non essere solo mancanza di volontà, ma un segnale dei tuoi ormoni. Il <strong>Bio-Recovery Platinum</strong> interviene per resettare i messaggeri chimici del tuo metabolismo.</p>
+
+            <p style="color:#b8860b; font-weight:bold; margin-top:20px; border-bottom:1px solid #eee;">🧬 COSA STIAMO ANDANDO A RESETTARE:</p>
+            
+            <ul style="list-style:none; padding:0; font-size:0.9em;">
+                <li style="margin-bottom:12px;">📉 <strong>Cortisolo Control:</strong> Lo stress da dieta cronica alza il cortisolo, l'ormone che distrugge i muscoli e blocca il dimagrimento addominale. Alzando le calorie, segnaliamo al corpo che l'emergenza è finita.</li>
+                <li style="margin-bottom:12px;">🚀 <strong>Leptina Boost:</strong> Dopo giorni di restrizione, la Leptina (l'ormone della sazietà e del metabolismo) crolla. Questa ricarica la riporta in alto, "riaccendendo" la tua fornace brucia-grassi.</li>
+                <li style="margin-bottom:12px;">🔄 <strong>T3 Optimization:</strong> Proteggiamo la conversione degli ormoni tiroidei, che rallenta quando i carboidrati sono bassi per troppo tempo.</li>
+            </ul>
+
+            <p style="color:#b8860b; font-weight:bold; margin-top:20px; border-bottom:1px solid #eee;">🍝 L'EFFETTO SUI TUOI MACRO:</p>
+            <p style="font-size:0.9em;">Non è cibo in più a caso. È un <strong>Refeed Tecnico</strong>: alziamo i carboidrati per riempire le scorte di glicogeno muscolare e dare nuova linfa al sistema nervoso centrale.</p>
+
+            <div style="background:#fff9e6; border:1px dashed #ffd700; padding:15px; border-radius:12px; margin-top:20px;">
+                <p style="color:#d97706; font-weight:bold; margin-top:0; font-size:0.9em;">⚠️ VINCOLI DEL PROTOCOLLO ELITE</p>
+                <p style="font-size:0.85em; margin-bottom:5px;">La gestione ormonale richiede precisione. Per massimizzare l'effetto "Reset" senza accumulare grasso:</p>
+                <ul style="font-size:0.85em; margin:0; padding-left:20px;">
+                    <li><strong>Freeze Strategico:</strong> Il Salvadanaio Calorie verrà congelato per <strong>7 giorni</strong>. Il corpo deve concentrarsi sull'energia che gli stiamo dando ora.</li>
+                    <li><strong>Accesso Platinum:</strong> Funzione riservata a chi ha dimostrato costanza (Serie 7+). Utilizzabile 1 volta ogni 10 giorni.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:25px;">
+            <button onclick="confirmBioRecovery()" style="background:linear-gradient(135deg, #FFD700, #FFA500); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; font-size:1em; cursor:pointer; box-shadow:0 4px 10px rgba(255,165,0,0.3);">🧬 ATTIVA RESET ORMONALE</button>
+            <button onclick="closeRecoveryModal()" style="background:transparent; color:#888; border:none; padding:10px; font-size:0.9em; cursor:pointer; text-decoration:underline;">🛡️ RESTA IN DEFICIT</button>
+        </div>
+    </div>
+</div>
 
 
 <div id="rewardModal" class="modal-overlay">
@@ -456,12 +524,17 @@
             <div class="big-val" id="remCal">0</div>
             <div class="sub-val">Kcal Rimanenti (Target: <span id="targetDisplay">0</span>)</div>
         </div>
-<div style="text-align:center; margin-top: 5px; margin-bottom: 20px;">
+<div style="text-align:center; margin-top: 10px; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+    
     <button onclick="useBankCalories()" 
-            style="background: rgba(255, 149, 0, 0.05); border: 1px solid rgba(255, 149, 0, 0.4); color: #ff9500; padding: 4px 12px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+            style="background: rgba(255, 149, 0, 0.05); border: 1px solid rgba(255, 149, 0, 0.4); color: #ff9500; padding: 5px 15px; border-radius: 12px; font-size: 0.65rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
         <span>💰</span> SALVADANAIO: <span id="bankDisplay">0</span> kcal
     </button>
-</div>
+
+        <button id="bioRecoveryBtn" class="btn-recovery-active" onclick="openRecoveryModal()">
+            <span>💎</span> BIO-RECOVERY
+        </button>
+    </div>
 
         <div style="position: relative; margin-top: 30px;">
             <div id="bmrMarker" class="bmr-line"></div>
@@ -598,6 +671,56 @@
 </div>
 
 <script>
+// Apre il modal con i controlli Platinum
+function openRecoveryModal() {
+    const streak = parseInt(localStorage.getItem('streak_days')) || 0;
+    const ultimoSOS = parseInt(localStorage.getItem('last_sos_energy')) || 0;
+    const giorniPassati = (Date.now() - ultimoSOS) / (1000 * 60 * 60 * 24);
+
+    // Requisito 1: Serie di 7 giorni
+    if (streak < 7) {
+        alert("🔒 Lo Status Platinum (7 giorni di serie) è richiesto per il Bio-Recovery.");
+        return;
+    }
+    
+    // Requisito 2: Frequenza (10 giorni)
+    if (giorniPassati < 10) {
+        alert("⚠️ Protocollo in ricarica. Disponibile tra " + Math.ceil(10 - giorniPassati) + " giorni.");
+        return;
+    }
+
+    document.getElementById('recoveryModal').style.display = 'flex';
+}
+
+// Chiude il modal
+function closeRecoveryModal() {
+    document.getElementById('recoveryModal').style.display = 'none';
+}
+
+// Attivazione effettiva
+function confirmBioRecovery() {
+    const oggi = Date.now();
+    localStorage.setItem('sos_active_today', 'true');
+    localStorage.setItem('last_sos_energy', oggi);
+    
+    // Blocca il Salvadanaio per 7 giorni esatti
+    localStorage.setItem('salvadanaio_blocked_until', oggi + (7 * 24 * 60 * 60 * 1000));
+    
+    alert("🧬 Reset Ormonale Attivato. La tua fornace metabolica si sta riaccendendo!");
+    location.reload();
+}
+
+// Funzione da aggiungere alla logica del tuo tasto Salvadanaio esistente
+function checkSalvadanaioLock() {
+    const lockUntil = parseInt(localStorage.getItem('salvadanaio_blocked_until')) || 0;
+    if (Date.now() < lockUntil) {
+        const giorni = Math.ceil((lockUntil - Date.now()) / (1000 * 60 * 60 * 24));
+        alert("🚫 Salvadanaio in Deep Freeze. Disponibile tra " + giorni + " giorni (Post Bio-Recovery).");
+        return false; // Blocca l'esecuzione
+    }
+    return true; // Prosegue
+}
+
 function applySOSLogic(c, p, f) {
     const isSos = localStorage.getItem('sos_mode_active') === 'true';
     if (!isSos) return { c, p, f };
@@ -1394,6 +1517,8 @@ localStorage.setItem('extra_today', 0);
         localStorage.setItem('foods_v3', JSON.stringify([])); 
         localStorage.setItem('water_count', 0);
         localStorage.setItem('water_last_time', 0);
+        localStorage.setltem('sos_act ive_today', 'false'); // Disattiva il bonus per il nuovo giorno
+        localStorage.setItem('extra_today',0); // Azzera eventuali calorie extra residue
         localStorage.setItem('app_date', todayStr);
 
         foods = []; 
@@ -1676,6 +1801,24 @@ localStorage.setItem('extra_today', 0);
         
         // Salva profilo
         localStorage.setItem('profile_v3', JSON.stringify(state));
+// --- LOGICA BIO-RECOVERY PLATINUM DENTRO CALC() ---
+const isBioActive = localStorage.getItem('sos_active_today') === 'true';
+
+if (isBioActive) {
+    // 1. Portiamo le calorie al Mantenimento (TDEE) per resettare gli ormoni
+    // Assicurati che la variabile 'tdee' sia definita nel tuo script
+    dailyTarget = tdee; 
+
+    // 2. Ripartizione Macro Refeed (Alta quota Carboidrati)
+    // Carboidrati al 55%, Proteine 25%, Grassi 20%
+    proteinTarget = (dailyTarget * 0.25) / 4;
+    fatsTarget = (dailyTarget * 0.20) / 9;
+    carbsTarget = (dailyTarget * 0.55) / 4;
+
+    // Opzionale: Cambia il titolo del box macro per feedback visivo
+    const macroTitle = document.querySelector('.macro-title');
+    if(macroTitle) macroTitle.innerText = "💎 BIO-RECOVERY ATTIVO";
+}
 
         // 2. SUGGERITORE PESO (Grafica)
         const suggestionBox = document.getElementById('idealWeightSuggestion');
