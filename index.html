@@ -296,9 +296,10 @@
                     <span>💎</span> STATUS PLATINUM (VIP)
                 </h3>
                 <p style="font-size: 0.85rem; color: #444; line-height: 1.5; margin-bottom: 12px;">
-                    Riservato ai clienti con piano di integrazione attivo su <b>pharmo.it</b>. 
+                    Riservato ai clienti con piano di acquisto ricorrente attivo su <b>pharmo.it</b>. 
                     Sblocca il controllo totale per trasformare il tuo corpo in una macchina brucia-grassi:<br><br>
                     💎 <b>SOS SGARRO:</b> Il "tasto reset" per attivare il <b>reset insulinico</b> post-pasto libero, svuotare il glicogeno ed <b>evitare l'accumulo di nuovo grasso</b>.<br><br>
+                    💎 <b>BOOST-RECOVERY:</b> Il protocollo per resettare gli ormoni quando sei stanco, senza forze o in stallo con il peso.<br><br>
                     💎 <b>INTENSITÀ PRO:</b> Gestione dinamica <b>Hard/Soft</b> per decidere quanto "spingere" il metabolismo in base ai tuoi obiettivi settimanali.<br><br>
                     💎 <b>FULL PASS:</b> Accesso immediato a Digiuno, Salvadanaio, Protocolli Shock e Report misure.
                 </p>
@@ -336,7 +337,7 @@
 </div>
 
         <div id="recoveryModal" class="modal-overlay">
-    <div class="modal-box" style="border: 2px solid #FFD700; max-height: 80vh; overflow-y: auto; display: flex; flex-direction: column;">
+    <div class="modal-box" style="border: 2px solid #FFD700; max-height: 80vh; overflow-y: auto; -webkit-overflow-scrolling: touch;">
         <h2 style="color:#007aff; margin-top:0; font-weight:800;">💎 RECOVERY PLATINUM</h2>
         <p style="text-align:center; font-weight:700; color:#b8860b; margin-bottom:10px;">📉 Ti senti stanco, senza forze o in stallo con il peso?</p>
         <p style="font-size:0.85rem; color:#666; font-style:italic; margin-bottom:20px;">Protocollo di Reset Metabolico</p>
@@ -346,6 +347,10 @@
                 <li style="margin-bottom:12px;">📉 <strong>Cortisolo Control:</strong> Lo stress da dieta blocca il dimagrimento, specialmente sulla pancia. Alzando strategicamente le calorie, diciamo al corpo che può finalmente rilassarsi e tornare a bruciare grasso.</li>
                 <li style="margin-bottom:12px;">🚀 <strong>Leptina Boost:</strong> Quando mangi poco per troppo tempo, il corpo va in "risparmio energetico" e senti sempre fame. Questo reset riaccende la tua fornace interna e spegne la fame nervosa.</li>
                 <li style="margin-bottom:12px;">🔄 <strong>T3 Optimization:</strong> Serve a riattivare il metabolismo lento, dando nuova energia al tuo corpo per evitare quegli stalli in cui il peso non scende più nonostante i sacrifici.</li>
+                <p style="color:#b8860b; font-weight:bold; margin-top:20px; border-bottom:1px solid #eee;">🍝 L'EFFETTO SUI TUOI MACRO:</p>
+<p style="font-size:0.9em; line-height:1.4;">
+    Non è cibo in più a caso. È un <strong>Refeed Tecnico</strong>: alziamo i <strong>Carboidrati al 55%</strong> della tua quota giornaliera per riempire le scorte di glicogeno muscolare e dare nuova linfa al sistema nervoso centrale.
+</p>
             </ul>
             
             <div style="background:#fff9e6; border:1px dashed #ffd700; padding:15px; border-radius:12px; margin-top:20px;">
@@ -353,7 +358,7 @@
                 <p style="font-size:0.85em; margin-bottom:5px;">La gestione ormonale richiede precisione. Per massimizzare l'effetto "Reset" senza accumulare grasso:</p>
                 <ul style="font-size:0.85em; margin:0; padding-left:20px;">
                     <li><strong>Freeze Strategico:</strong> Il Salvadanaio Calorie verrà congelato per <strong>7 giorni</strong>. Il corpo deve concentrarsi sull'energia che gli stiamo dando ora.</li>
-                    <li><strong>Accesso Platinum:</strong> Funzione riservata a chi ha dimostrato costanza (Serie 7+). Utilizzabile 1 volta ogni 10 giorni.</li>
+                    <li><strong>Accesso Platinum:</strong> Funzione riservata a chi ha dimostrato costanza (Serie 7+). Utilizzabile 1 volta ogni 10 giorni. Sbloccabile con gli acquisti ricorrenti su pharmo.it.</li>
                 </ul>
             </div>
         </div>
@@ -544,7 +549,7 @@
     </button>
 
         <button id="bioRecoveryBtn" class="btn-recovery-active" onclick="openRecoveryModal()">
-            <span>💎</span> BIO-RECOVERY
+            <span>💎</span> BOOST-RECOVERY
         </button>
     </div>
 
@@ -686,25 +691,28 @@
 // Apre il modal con i controlli Platinum
 function openRecoveryModal() {
     const isVip = localStorage.getItem('app_vip_v1') === 'true';
-    if (!isVip) {
-        alert("💎 FUNZIONE PLATINUM\n\nIl Recovery è riservato ai clienti VIP. Sbloccalo con il codice che trovi nel tuo pacco Pharmo!");
-        return;
+    const streak = parseInt(localStorage.getItem('streak_days')) || 0;
+
+    // Se NON è VIP oppure NON ha la serie di 7 giorni, mostriamo l'avviso completo
+    if (!isVip || streak < 7) {
+        alert(
+            "💎 IL RECOVERY È RISERVATO AI CLIENTI VIP.\n" +
+            "Sbloccalo con il codice che ottieni con gli acquisti ricorrenti su pharmo.it\n\n" +
+            "🔒 NOTA: È richiesta anche una serie di almeno 7 giorni per l'attivazione (Attuale: " + streak + ")."
+        );
+        // Dopo l'OK dell'alert, l'esecuzione continua e mostriamo il banner informativo sotto
     }
 
-    const streak = parseInt(localStorage.getItem('streak_days')) || 0;
+    // Controllo del tempo di ricarica (questo è l'unico blocco che ferma tutto se non rispettato)
     const ultimoRecovery = parseInt(localStorage.getItem('last_recovery_timestamp')) || 0;
     const giorniPassati = (Date.now() - ultimoRecovery) / (1000 * 60 * 60 * 24);
-
-    if (streak < 7) {
-        alert("🔒 Serie di 7 giorni richiesta per attivare il Recovery.");
-        return;
-    }
     
     if (giorniPassati < 10) {
         alert("⚠️ Protocollo in ricarica. Disponibile tra " + Math.ceil(10 - giorniPassati) + " giorni.");
-        return;
+        return; // Ferma l'apertura se è in ricarica
     }
 
+    // Apre il banner informativo per tutti
     document.getElementById('recoveryModal').style.display = 'flex';
 }
 
@@ -713,6 +721,13 @@ function closeRecoveryModal() {
 }
 
 function confirmRecovery() {
+    const isVip = localStorage.getItem('app_vip_v1') === 'true';
+    const streak = parseInt(localStorage.getItem('streak_days')) || 0;
+
+    if (!isVip || streak < 7) {
+        alert("Sblocca lo Status Platinum per attivare il protocollo.");
+        return;
+    }
     const oggi = Date.now();
     localStorage.setItem('recovery_active_today', 'true');
     localStorage.setItem('last_recovery_timestamp', oggi);
