@@ -10,9 +10,15 @@
     background: linear-gradient(135deg, #00d4ff 0%, #0077ff 50%, #00d4ff 100%) !important;
     background-size: 200% auto !important;
     color: white !important;
-    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3); /* Ombra più sottile */
+    box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
     transition: 0.3s;
     animation: pulseBlue 2s infinite, shine 3s infinite linear;
+
+    /* AGGIUNGI QUESTE: */
+    white-space: nowrap;       /* Impedisce al lucchetto di finire sotto il testo */
+    min-width: fit-content;    /* Forza il bottone ad allargarsi per ospitare l'emoji */
+}
+
     
     /* MODIFICHE PER DISCREZIONE */
     border: none;
@@ -1824,14 +1830,21 @@ localStorage.setItem('extra_today', 0);
 
 
         function calc() {
-    // --- GESTIONE VISIVA LUCCHETTO ---
+    // --- GESTIONE EMOJI (VISIBILE A TUTTI) ---
     const recoveryLock = document.getElementById('recoveryLock');
     if (recoveryLock) {
         const isVip = localStorage.getItem('app_vip_v1') === 'true';
         const streak = parseInt(localStorage.getItem('streak_days')) || 0;
-        // Se VIP e serie >= 7 mostra diamante, altrimenti lucchetto
-        recoveryLock.innerText = (isVip && streak >= 7) ? "💎" : "🔒";
+        
+        // Se ha entrambi i requisiti vede il Diamante, ALTRIMENTI (per tutti gli altri) vede il Lucchetto
+        if (isVip && streak >= 7) {
+            recoveryLock.innerText = "💎";
+        } else {
+            recoveryLock.innerText = "🔒";
+        }
     }
+    // ... resto del codice
+
     // ... (prosegui con state.g, state.age, ecc.)
     
     // 1. RECUPERO DATI (Input Utente)
@@ -1907,22 +1920,20 @@ localStorage.setItem('extra_today', 0);
         else { gTxt="Mantenimento"; sTit="Protocollo Definizione"; sDes=stackGain; }
     }
 
-    // --- 5. LOGICA RECOVERY vs STANDARD ---
-    // --- LOGICA RECOVERY PLATINUM ---
-const isRecoveryActive = localStorage.getItem('recovery_active_today') === 'true';
+        // --- 5. LOGICA RECOVERY PLATINUM ---
+    const isRecoveryActive = localStorage.getItem('recovery_active_today') === 'true';
 
-if (isRecoveryActive) {
-    TGT_CAL = TDEE; // Usa TDEE (tutto maiuscolo)
-    TGT_C = Math.round((TGT_CAL * 0.55) / 4); 
-    TGT_P = Math.round((TGT_CAL * 0.25) / 4); 
-    TGT_F = Math.round((TGT_CAL * 0.20) / 9);
-    
-    const statusText = document.getElementById('statusText');
-    if (statusText) {
-        statusText.innerHTML = "💎 <b style='color:#b8860b'>BOOST-RECOVERY ATTIVO:</b> Reset ormonale in corso!";
-    }
-} else { 
-    // Qui metti il tuo ELSE che racchiude tutto il resto...
+    if (isRecoveryActive) {
+        TGT_CAL = TDEE; 
+        TGT_C = Math.round((TGT_CAL * 0.55) / 4); 
+        TGT_P = Math.round((TGT_CAL * 0.25) / 4); 
+        TGT_F = Math.round((TGT_CAL * 0.20) / 9);
+        
+        const stText = document.getElementById('statusText');
+        if (stText) stText.innerHTML = "💎 <b style='color:#b8860b'>BOOST-RECOVERY ATTIVO:</b> Reset ormonale in corso!";
+    } else { 
+        // Qui dentro ci deve essere tutto il resto dei calcoli (adj, goal, ecc.)
+
         // 5. CALCOLO CALORIE BASE
         let adj = { 
             'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 
@@ -1931,21 +1942,15 @@ if (isRecoveryActive) {
         };
         TGT_CAL = Math.round(TDEE * adj[state.goal]);
 
-        // 6. CALCOLO MACRO BASE
         let baseC = Math.round((TGT_CAL * c_r) / 4);
         let baseP = Math.round((TGT_CAL * p_r) / 4);
         let baseF = Math.round((TGT_CAL * f_r) / 9);
 
-        // 7. APPLICA LOGICA PROTOCOLLO
         const finalMacros = applyProtocolLogic(baseC, baseP, baseF);
-        TGT_C = finalMacros.c;
-        TGT_P = finalMacros.p;
-        TGT_F = finalMacros.f;
+        TGT_C = finalMacros.c; TGT_P = finalMacros.p; TGT_F = finalMacros.f;
 
         const finalSOS = applySOSLogic(TGT_C, TGT_P, TGT_F);
-        TGT_C = finalSOS.c;
-        TGT_P = finalSOS.p;
-        TGT_F = finalSOS.f;
+        TGT_C = finalSOS.c; TGT_P = finalSOS.p; TGT_F = finalSOS.f;
 
         TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9);
     }
@@ -2549,6 +2554,7 @@ function getProtocolToast() {
     // --- INIT ---
     // --- BLOCCO DI AVVIO UNIFICATO E CORRETTO ---
 window.addEventListener('DOMContentLoaded', () => {
+calc(); 
 // --- AGGIORNAMENTO VISIVO DELLA SERIE ---
 // --- LOGICA BADGE SERIE (STREAK) ---
 const actualStreak = parseInt(localStorage.getItem('streak_days')) || 1;
