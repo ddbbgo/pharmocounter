@@ -668,9 +668,9 @@
 
 <ul id="list" class="food-list"></ul>
 
-  <div style="text-align:center; margin-top:20px; padding-bottom:30px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+<div style="text-align:center; margin-top:20px; padding-bottom:30px; display:flex; flex-direction:column; align-items:center; gap:8px;">
     
-    <span id="renewalLinkText" onclick="document.getElementById('authGate').style.display='flex'" 
+    <span id="renewalLinkText" onclick="document.getElementById('authGate').style.display='flex'; document.getElementById('closeAuthBtn').style.display='block';" 
           style="font-size:0.75rem; color:#007aff; cursor:pointer; text-decoration:underline; font-weight:700;">
         Caricamento stato accesso...
     </span>
@@ -688,6 +688,7 @@
         </a>
     </div>
 </div>
+
 
 <script>
 // Apre il modal con i controlli Platinum
@@ -2637,7 +2638,79 @@ window.addEventListener('DOMContentLoaded', () => {
 
     appReady = true; 
 });
+// --- FUNZIONE REPORT SETTIMANALE GRAFICO ---
+function showWeeklyReport(manualBank) {
+    // 1. Controlla se PRO
+    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+    if (!isPremium) {
+        alert("🔒 FUNZIONE PRO\n\nIl Report Grafico Settimanale è riservato ai membri Gold/Platinum.");
+        return;
+    }
+
+    // 2. Prendi i dati (o usa quelli simulati dal test)
+    let bank = manualBank || parseFloat(localStorage.getItem('calorie_bank')) || 0;
+    
+    // 3. Calcoli (Stima grasso: 7700kcal = 1kg)
+    let fatLost = Math.round((bank / 7700) * 1000); // in grammi
+    if (fatLost < 0) fatLost = 0;
+
+    // 4. Aggiorna HTML
+    document.getElementById('repCal').innerText = Math.round(bank);
+    document.getElementById('repFat').innerText = fatLost;
+
+    // 5. Configura tasto WhatsApp
+    let msg = `📊 *IL MIO REPORT PHARMO*\n\n🔥 Ho risparmiato: ${Math.round(bank)} kcal\n⚖️ Grasso stimato perso: -${fatLost}g\n\n🚀 Unisciti alla sfida su pharmo.it!`;
+    document.getElementById('btnShareWa').setAttribute('onclick', `window.open('https://wa.me/?text=${encodeURIComponent(msg)}', '_blank')`);
+
+    // 6. Mostra il Modal
+    document.getElementById('weeklyReportModal').style.display = 'flex';
+}
 
 </script>
+
+<div id="weeklyReportModal" class="modal-overlay" style="display:none; z-index:100000;">
+    <div class="modal-box" style="background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); border-radius: 24px; padding: 0; overflow: hidden; max-width: 340px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+        
+        <div style="background: linear-gradient(135deg, #007aff 0%, #0056b3 100%); padding: 25px 20px; text-align: center; color: white;">
+            <div style="font-size: 3rem; margin-bottom: 5px;">📊</div>
+            <h2 style="margin:0; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px;">REPORT SETTIMANALE</h2>
+            <p style="margin:5px 0 0 0; opacity: 0.9; font-size: 0.9rem;">La tua settimana in numeri</p>
+        </div>
+
+        <div style="padding: 25px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                
+                <div style="background: #fff; padding: 15px; border-radius: 16px; border: 1px solid #e1e4e8; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                    <div style="font-size: 0.8rem; color: #666; font-weight: 600; text-transform: uppercase;">Risparmio</div>
+                    <div style="font-size: 1.3rem; color: #007aff; font-weight: 800; margin-top: 5px;">
+                        <span id="repCal">0</span> <span style="font-size:0.8rem;">kcal</span>
+                    </div>
+                </div>
+
+                <div style="background: #fff; padding: 15px; border-radius: 16px; border: 1px solid #e1e4e8; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                    <div style="font-size: 0.8rem; color: #666; font-weight: 600; text-transform: uppercase;">Grasso Perso</div>
+                    <div style="font-size: 1.3rem; color: #ff9500; font-weight: 800; margin-top: 5px;">
+                        -<span id="repFat">0</span> <span style="font-size:0.8rem;">g</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: #444; font-size: 0.9rem; line-height: 1.5; margin-bottom: 25px;">
+                Ottimo lavoro! Hai trasformato il tuo deficit calorico in risultati reali. Continua così! 🚀
+            </p>
+
+            <button id="btnShareWa" onclick="" 
+                style="width: 100%; background: #25D366; color: white; border: none; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 1rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);">
+                <i class="fab fa-whatsapp"></i> Condividi Risultati
+            </button>
+            
+            <button onclick="document.getElementById('weeklyReportModal').style.display='none'" 
+                style="width: 100%; background: transparent; color: #888; border: none; padding: 10px; font-weight: 600; cursor: pointer;">
+                Chiudi
+            </button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
