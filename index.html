@@ -1453,40 +1453,25 @@ localStorage.setItem('extra_today', 0);
         
         // Se oggi è Lunedì, facciamo il bilancio finale della settimana passata
  // Cerca questo pezzo e sostituiscilo:
-if (dayOfWeek === 1) { 
-    const isPremium = localStorage.getItem('app_premium_v1') === 'true';
-    if (!isPremium) {
-        alert("📊 REPORT SETTIMANALE DISPONIBILE!\n\nAbbiamo analizzato i tuoi dati. Per vedere il report completo dei tuoi progressi devi essere un utente PRO.");
-        localStorage.setItem('calorie_bank', 0);
-    } else { // Aggiunto l'else per far fluire il report solo ai premium
-        let bank = parseFloat(localStorage.getItem('calorie_bank')) || 0;
-        let grassoPerso = Math.round(bank / 7);
-        // ... resto del codice del report ...
-    }
-    localStorage.setItem('calorie_bank', 0); // Reset dopo il report
-} else if (dayOfWeek === 0) { 
-    // ...
-
-
-            if (bank > 0) {
-                let reportTesto = `📊 IL MIO TRAGUARDO SETTIMANALE PHARMO:\n\n` +
-                  `🔥 Calorie risparmiate: ${Math.round(bank)} kcal\n` +
-                  `⚖️ Grasso extra perso (stima): ~${grassoPerso}g\n\n` +
-                  `🎁 Condividi questo report ai tuoi amici o a pharmo.it per ricevere una sorpresa!\n\n` +
-                  `🍎 Inizia anche tu il tuo percorso su: tinyurl.com/pharmoit`;
-
-                // Mostra il report
-                alert(reportTesto);
-
-                // Chiede se vuole inoltrarlo su WhatsApp
-                if (confirm("Vuoi inoltrare il tuo report su WhatsApp per provare a ricevere una sorpresa?")) {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(reportTesto)}`, '_blank');
+                        // --- 📊 REPORT SETTIMANALE & RESET ---
+        if (dayOfWeek === 1) { 
+            const isPremium = localStorage.getItem('app_premium_v1') === 'true';
+            if (!isPremium) {
+                alert("📊 REPORT SETTIMANALE DISPONIBILE!\n\nAbbiamo analizzato i tuoi dati. Per vedere il report completo dei tuoi progressi devi essere un utente PRO.");
+            } else { 
+                let bank = parseFloat(localStorage.getItem('calorie_bank')) || 0;
+                let grassoPerso = Math.round(bank / 7);
+                if (bank > 0) {
+                    let reportTesto = `📊 IL MIO TRAGUARDO SETTIMANALE PHARMO:\n\n🔥 Calorie risparmiate: ${Math.round(bank)} kcal\n⚖️ Grasso extra perso (stima): ~${grassoPerso}g\n\n🍎 Inizia anche tu su: tinyurl.com/pharmoit`;
+                    alert(reportTesto);
+                    if (confirm("Vuoi inoltrare il tuo report su WhatsApp?")) {
+                        window.open(`https://wa.me/?text=${encodeURIComponent(reportTesto)}`, '_blank');
+                    }
                 }
             }
-            // Reset settimanale (lo facciamo solo di Lunedì dopo il report)
-            localStorage.setItem('calorie_bank', 0);
-
+                        localStorage.setItem('calorie_bank', 0); // Reset dopo il report
         } else if (dayOfWeek === 0) {
+
             // Se è domenica, diamo solo un piccolo incoraggiamento (opzionale)
             setTimeout(() => {
                 showToast("📊 Domani mattina riceverai il tuo Report Settimanale completo!");
@@ -1847,7 +1832,7 @@ if (dayOfWeek === 1) {
         }
     }
 
-    // --- 1. RECUPERO DATI (Filtro Anti-Blocco) ---
+    // --- 1. RECUPERO DATI ---
     state.g = document.getElementById('gender').value;
     state.age = parseFloat(document.getElementById('age').value) || 30;
     state.w = parseFloat(document.getElementById('weight').value) || 0;
@@ -1855,7 +1840,7 @@ if (dayOfWeek === 1) {
     state.act = parseFloat(document.getElementById('act').value) || 1.375;
     state.goal = document.getElementById('goal').value;
 
-    // Se i dati sono a zero, mostra l'avviso e ferma lo script per non crashare
+    // Se i dati sono a zero, mostra l'avviso e ferma lo script
     if (state.w === 0 || state.h === 0) {
         document.getElementById('scientificData').innerHTML = "⚠️ Inserisci <b>Peso</b> e <b>Altezza</b> per vedere i calcoli.";
         return; 
@@ -1879,7 +1864,7 @@ if (dayOfWeek === 1) {
     
     localStorage.setItem('profile_v3', JSON.stringify(state));
 
-    // --- 2. SUGGERITORE PESO (ESTETICA) ---
+    // --- 2. SUGGERITORE PESO ---
     const suggestionBox = document.getElementById('idealWeightSuggestion');
     if (suggestionBox) {
         suggestionBox.style.display = 'block';
@@ -1903,9 +1888,12 @@ if (dayOfWeek === 1) {
     BMR = (state.g === 'm') ? s + 5 : s - 161;
     TDEE = Math.round(BMR * state.act);
 
-    // --- 4. OBIETTIVI (TESTI E SIMBOLI ORIGINALI) ---
+    // --- VARIABILI OBIETTIVI ---
     let p_r, c_r, f_r, gTxt, sTit, sDes;
     let reqHighProt = false;
+    
+    // QUESTA È LA VARIABILE CHE DAVA PROBLEMI SE DUPLICATA
+    let adj = { 'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 'maintain': 1.0, 'gain': 1.10 };
 
     if (state.goal.startsWith('lose')) {
         sTit = "Protocollo Total Body 3-Fasi"; sDes = stackLoss;
@@ -1915,6 +1903,7 @@ if (dayOfWeek === 1) {
     } else if (state.goal === 'recomp') {
         c_r=0.35; p_r=0.35; f_r=0.3; gTxt="💪 Ricomposizione Corporea"; sTit="Protocollo Recomp"; sDes=stackRecomp; reqHighProt=true;
     } else {
+        // ELSE GENERICO
         c_r=0.5; p_r=0.2; f_r=0.3; 
         if(state.goal==='detox') { gTxt="💧 Detox & Sgonfiamento (-5%)"; sTit="Protocollo Detox"; sDes=stackDetox; }
         else if(state.goal==='beauty') { gTxt="✨ Beauty & Anti-Age (Mantenimento)"; sTit="Protocollo Glow"; sDes=stackBeauty; c_r=0.45; p_r=0.25; }
@@ -1933,11 +1922,7 @@ if (dayOfWeek === 1) {
         const stText = document.getElementById('statusText');
         if (stText) stText.innerHTML = "💎 <b style='color:#b8860b'>BOOST-RECOVERY ATTIVO:</b> Reset ormonale in corso!";
     } else { 
-        let adj = { 
-            'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 
-            'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 
-            'maintain': 1.0, 'gain': 1.10 
-        };
+        // CALCOLO NORMALE
         TGT_CAL = Math.round(TDEE * (adj[state.goal] || 1.0));
 
         let baseC = (TGT_CAL * c_r) / 4;
@@ -1953,7 +1938,7 @@ if (dayOfWeek === 1) {
         TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9);
     }
 
-    // --- 6. CORREZIONE PROTEINE & SALVADANAIO ---
+    // --- 6. CORREZIONE PROTEINE ---
     PT_MIN_G = reqHighProt ? Math.round(state.w * 1.8) : 0;
     localStorage.setItem('pt_min_g', PT_MIN_G);
     
@@ -2013,6 +1998,9 @@ if (dayOfWeek === 1) {
             li.innerHTML = `<div class="food-info"><div class="food-name">${f.n}</div><div class="food-details">C:${f.c} P:${f.p} G:${f.f}</div></div><div class="food-actions"><span class="food-cal">${f.k}</span><button class="btn-del" onclick="rem(${foods.length - 1 - idx})">elimina</button></div>`;
             if(list) list.appendChild(li);
         });
+    // SALVATAGGIO CONSUMO (PER NON RESETTARE LA SFIDA)
+    localStorage.setItem('last_day_total_consumed', curCal); 
+    localStorage.setItem('last_day_target', TGT_CAL);
 
         // 2. Calcoli Preliminari per Barra & Avvisi
         let diff = TGT_CAL - curCal;
