@@ -6,25 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pharmocounter</title>
     <style>
-    .btn-recovery-active {
+/* MODIFICHE PER DISCREZIONE - Uniscile alla classe precedente */
+.btn-recovery-active {
     background: linear-gradient(135deg, #00d4ff 0%, #0077ff 50%, #00d4ff 100%) !important;
     background-size: 200% auto !important;
     color: white !important;
     box-shadow: 0 2px 8px rgba(0, 212, 255, 0.3);
     transition: 0.3s;
     animation: pulseBlue 2s infinite, shine 3s infinite linear;
-
-    /* AGGIUNGI QUESTE: */
-    white-space: nowrap;       /* Impedisce al lucchetto di finire sotto il testo */
-    min-width: fit-content;    /* Forza il bottone ad allargarsi per ospitare l'emoji */
-}
-
-    
-    /* MODIFICHE PER DISCREZIONE */
+    white-space: nowrap;
+    min-width: fit-content;
     border: none;
-    border-radius: 20px;       /* Più arrotondato, stile pillola */
-    padding: 4px 12px;         /* Molto più basso */
-    font-size: 0.65rem;        /* Testo piccolo come il salvadanaio */
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.3px;
     cursor: pointer;
@@ -32,6 +27,7 @@
     align-items: center;
     gap: 4px;
 }
+
 
 @keyframes shine {
     to { background-position: 200% center; }
