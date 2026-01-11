@@ -866,23 +866,30 @@ function applySOSLogic(c, p, f) {
 
 function activateSOS() {
     const isVip = localStorage.getItem('app_vip_v1') === 'true';
+    const isSosAlreadyActive = localStorage.getItem('sos_mode_active') === 'true';
 
-    // SE NON È VIP -> PUBBLICITÀ
+    // 1. SE NON È VIP -> MOSTRA IL TUO TESTO ORIGINALE
     if (!isVip) {
-    alert(
-        "⚡ IL TUO 'TASTO RESET' È BLOCCATO\n\n" +
-        "Hai esagerato a tavola? Non rovinare i progressi di una settimana!\n\n" +
-        "Il Protocollo SOS Sgarro è il sistema d'emergenza esclusivo dei Membri Platinum che:\n\n" +
-        "1. 🛡️ SCHERMA i grassi in eccesso prima che si depositino.\n" +
-        "2. 🔄 RE-SETTA l'insulina rimodulando i macro per compensare l'eccesso.\n" +
-        "3. 🚀 ACCELERA lo svuotamento del glicogeno per tornare subito 'flat'.\n\n" +
-        "Sblocca questa funzione con il tuo Codice VIP e trasforma ogni sgarro in una ricarica metabolica controllata!"
-    );
-    return;
-}
+        alert(
+            "⚡ IL TUO 'TASTO RESET' È BLOCCATO\n\n" +
+            "Hai esagerato a tavola? Non rovinare i progressi di una settimana!\n\n" +
+            "Il Protocollo SOS Sgarro è il sistema d'emergenza esclusivo dei Membri Platinum che:\n\n" +
+            "1. 🛡️ SCHERMA i grassi in eccesso prima che si depositino.\n" +
+            "2. 🔄 RE-SETTA l'insulina rimodulando i macro per compensare l'eccesso.\n" +
+            "3. 🚀 ACCELERA lo svuotamento del glicogeno per tornare subito 'flat'.\n\n" +
+            "Sblocca questa funzione con il tuo Codice VIP e trasforma ogni sgarro in una ricarica metabolica controllata!"
+        );
+        return;
+    }
 
-    // SE È VIP -> PROCEDI CON L'ATTIVAZIONE
-    if(confirm("⚠️ ATTIVARE DAMAGE CONTROL?\n\nVuoi attivare il protocollo di emergenza per le prossime 24 ore?")) {
+    // 2. SE È GIÀ ATTIVO -> AVVISA E NON CHIEDERE PIÙ
+    if (isSosAlreadyActive) {
+        alert("🚀 Il Protocollo SOS è già attivo! Il tuo metabolismo sta già lavorando per compensare lo sgarro.");
+        return;
+    }
+
+    // 3. SE È VIP E NON ATTIVO -> CHIEDI DI ATTIVARE
+    if(confirm("⚠️ ATTIVARE DAMAGE CONTROL?\n\nVuoi attivare il protocollo di emergenza per le prossime 24 ore? I tuoi obiettivi verranno rimodulati per evitare l'accumulo di grasso.")) {
         localStorage.setItem('sos_mode_active', 'true');
         localStorage.setItem('sos_start_time', Date.now());
         showToast("🚀 Protocollo SOS Attivo!");
@@ -890,7 +897,6 @@ function activateSOS() {
         calc();
     }
 }
-
 
 function deactivateSOS() {
     if(confirm("Vuoi interrompere il protocollo SOS e tornare ai calcoli standard?")) {
@@ -1963,12 +1969,20 @@ localStorage.setItem('extra_today', 0);
     BMR = (state.g === 'm') ? s + 5 : s - 161;
     TDEE = Math.round(BMR * state.act);
 
-    // --- VARIABILI OBIETTIVI ---
-    let p_r, c_r, f_r, gTxt, sTit, sDes;
+        // --- VARIABILI OBIETTIVI ---
+    // Definiamo tutto qui una volta sola per evitare errori
+    let p_r, c_r, f_r, gTxt;
+    
+    // Assegniamo subito un testo di base per evitare caselle vuote
+    let sTit = "Protocollo Standard";
+    let sDes = "Analisi strategia in corso...";
+    
+    // Variabile per il controllo proteine
     let reqHighProt = false;
     
-    // QUESTA È LA VARIABILE CHE DAVA PROBLEMI SE DUPLICATA
+    // Definiamo i moltiplicatori obiettivi
     let adj = { 'lose_aggr': 0.80, 'lose_athlete_15': 0.85, 'lose_cons': 0.90, 'detox': 0.95, 'beauty': 1.0, 'recomp': 0.95, 'maintain': 1.0, 'gain': 1.10 };
+
 
     if (state.goal.startsWith('lose')) {
         sTit = "Protocollo Total Body 3-Fasi"; sDes = stackLoss;
@@ -1986,19 +2000,33 @@ localStorage.setItem('extra_today', 0);
         else { gTxt="⚖️ Mantenimento"; sTit="Protocollo Definizione"; sDes=stackGain; }
     }
 
-    // --- 5. LOGICA PROTOCOLLI SPECIALI ---
+        // --- 5. LOGICA PROTOCOLLI SPECIALI ---
     const isRecoveryActive = localStorage.getItem('recovery_active_today') === 'true';
+    const isSos = localStorage.getItem('sos_mode_active') === 'true';
 
     if (isRecoveryActive) {
+        // 💎 RECOVERY: QUI ALZIAMO LE CALORIE
+        // Impostiamo il target esattamente al TDEE (Mantenimento).
+        // Se il tuo TDEE è 2000 e eri a dieta a 1500, oggi vedrai 2000.
         TGT_CAL = TDEE; 
+        
+        // Ripartizione specifica Recovery: 55% Carbo / 25% Prot / 20% Grassi
         TGT_C = Math.round((TGT_CAL * 0.55) / 4); 
         TGT_P = Math.round((TGT_CAL * 0.25) / 4); 
         TGT_F = Math.round((TGT_CAL * 0.20) / 9);
+        
         const stText = document.getElementById('statusText');
         if (stText) stText.innerHTML = "💎 <b style='color:#b8860b'>BOOST-RECOVERY ATTIVO:</b> Reset ormonale in corso!";
     } else { 
-        // CALCOLO NORMALE
+        // GIORNI NORMALI (o SOS)
+        
+        // 1. Calcolo Base con Deficit (es. -20%)
         TGT_CAL = Math.round(TDEE * (adj[state.goal] || 1.0));
+
+        // 2. Se SOS è attivo, lo portiamo al TDEE (ma con carbo bassi)
+        if (isSos) {
+            TGT_CAL = TDEE; 
+        }
 
         let baseC = (TGT_CAL * c_r) / 4;
         let baseP = (TGT_CAL * p_r) / 4;
@@ -2010,8 +2038,11 @@ localStorage.setItem('extra_today', 0);
         TGT_C = Math.round(finalSOS.c);
         TGT_P = Math.round(finalSOS.p);
         TGT_F = Math.round(finalSOS.f);
-        TGT_CAL = (TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9);
+
+        // Ricalcolo finale per sicurezza
+        TGT_CAL = Math.round((TGT_C * 4) + (TGT_P * 4) + (TGT_F * 9));
     }
+
 
     // --- 6. CORREZIONE PROTEINE ---
     PT_MIN_G = reqHighProt ? Math.round(state.w * 1.8) : 0;
@@ -2039,11 +2070,40 @@ localStorage.setItem('extra_today', 0);
         document.getElementById('shopDesc').innerHTML = sDes;
     }
     
-    document.getElementById('targetDisplay').innerText = Math.round(TGT_CAL);
+    // --- AGGIORNAMENTO UI COMPLETO ---
+    
+    // 1. Aggiorna il numero grande delle Calorie
+    const targetDisplayEl = document.getElementById('targetDisplay');
+    if (targetDisplayEl) targetDisplayEl.innerText = Math.round(TGT_CAL);
 
+    // 2. GESTIONE PROTOCOLLO E PRODOTTI
+    const shopTitleEl = document.getElementById('shopTitle');
+    const shopDescEl = document.getElementById('shopDesc');
+
+    if (isRecoveryActive) {
+        // CASO RECOVERY:
+        // Titolo speciale
+        if (shopTitleEl) shopTitleEl.innerText = "💎 BOOST RECOVERY - RESET";
+        
+        // QUI MOSTRIAMO I PRODOTTI:
+        // Uso 'stackDetox' perché è il kit per il reset. 
+        // Se vuoi i prodotti normali, scrivi: shopDescEl.innerHTML = sDes;
+        if (shopDescEl) shopDescEl.innerHTML = stackDetox; 
+
+    } else {
+        // CASO NORMALE:
+        if (shopTitleEl) shopTitleEl.innerText = sTit; 
+        if (shopDescEl) shopDescEl.innerHTML = sDes;
+    }
+
+    // 3. Barra BMR
     let bmrPct = (TGT_CAL > 0) ? Math.min((BMR / TGT_CAL) * 100, 95) : 0;
-    document.getElementById('bmrMarker').style.left = bmrPct + "%";
-    document.getElementById('bmrTag').style.left = bmrPct + "%";
+    const bmrMarker = document.getElementById('bmrMarker');
+    const bmrTag = document.getElementById('bmrTag');
+    if (bmrMarker) bmrMarker.style.left = bmrPct + "%";
+    if (bmrTag) bmrTag.style.left = bmrPct + "%";
+
+
 
     const protDashArea = document.getElementById('proteinDashboardArea');
     if (['lose_athlete_15', 'lose_cons', 'recomp', 'gain'].includes(state.goal)) {
@@ -2757,6 +2817,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (fStart) fStart.value = localStorage.getItem('fasting_start') || '13:00';
     updateFastingUI();
 updateSugarUI();
+renderSOS();
     appReady = true; 
 });
 // --- FUNZIONE REPORT SETTIMANALE GRAFICO ---
@@ -2779,12 +2840,28 @@ function showWeeklyReport(manualBank) {
     document.getElementById('repCal').innerText = Math.round(bank);
     document.getElementById('repFat').innerText = fatLost;
 
-    // 5. Configura tasto WhatsApp
-    let msg = `📊 *IL MIO REPORT PHARMO*\n\n🔥 Ho risparmiato: ${Math.round(bank)} kcal\n⚖️ Grasso stimato perso: -${fatLost}g\n\n🚀 Unisciti alla sfida su pharmo.it!`;
-    document.getElementById('btnShareWa').setAttribute('onclick', `window.open('https://wa.me/?text=${encodeURIComponent(msg)}', '_blank')`);
+        // 5. Configura tasto WhatsApp
+const msg = "🏆 *RISULTATI SETTIMANALI PHARMO* 🏆\n\n" +
+            "Questa settimana ho trasformato il mio corpo! 🔥\n\n" +
+            "📉 *Calorie Bruciate:* " + Math.round(bank) + " kcal\n" +
+            "⚖️ *Grasso Eliminato:* ~" + fatLost + "g\n" +
+            "🚀 *Stato:* Metabolismo Accelerato\n\n" +
+            "Sto usando il metodo Pharmo per scolpire il mio fisico. 🍎\n\n" +
+            "Guarda come funziona qui: pharmo.it";
+
+const btnWa = document.getElementById('btnShareWa');
+if (btnWa) {
+    btnWa.onclick = function() {
+        // Usiamo un link diretto pulito
+        const waUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(msg);
+        window.open(waUrl, "_blank");
+    };
+}
+
 
     // 6. Mostra il Modal
     document.getElementById('weeklyReportModal').style.display = 'flex';
+
 }
 // --- FUNZIONI BACKUP SEMPLIFICATO ---
 
@@ -3297,5 +3374,6 @@ function showDataLockPopup() {
     }
 }
 </script>
+
 </body>
 </html>
